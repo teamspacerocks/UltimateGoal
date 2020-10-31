@@ -51,8 +51,7 @@ import com.qualcomm.robotcore.util.Range
 class DriverControlled : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
-    private lateinit var leftDrive: DcMotor;
-    private lateinit var rightDrive: DcMotor;
+
     override fun runOpMode() {
         telemetry.addData("Status", "Initialized")
         telemetry.update()
@@ -60,13 +59,18 @@ class DriverControlled : LinearOpMode() {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        n
-        rightDrive = hardwareMap.get(DcMotor::class.java, "right_drive")
+
+        var leftFront = hardwareMap.get(DcMotor::class.java, "left_front")
+        var rightFront = hardwareMap.get(DcMotor::class.java, "right_front")
+        var leftBack = hardwareMap.get(DcMotor::class.java, "left_back")
+        var rightBack = hardwareMap.get(DcMotor::class.java, "right_back")
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.direction = DcMotorSimple.Direction.FORWARD
-        rightDrive.direction = DcMotorSimple.Direction.REVERSE
+        //leftFront.direction = DcMotorSimple.Direction.FORWARD
+        //leftBack.direction = DcMotorSimple.Direction.FORWARD //Commented out for redundency
+        rightFront.direction = DcMotorSimple.Direction.REVERSE
+        rightBack.direction = DcMotorSimple.Direction.REVERSE
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart()
@@ -95,8 +99,10 @@ class DriverControlled : LinearOpMode() {
             // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-            leftDrive.power = leftPower
-            rightDrive.power = rightPower
+            rightFront.power = rightPower
+            rightBack.power = rightPower
+            leftBack.power = leftPower
+            leftFront.power = leftPower
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: $runtime")
