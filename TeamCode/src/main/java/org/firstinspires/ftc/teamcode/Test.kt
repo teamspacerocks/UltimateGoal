@@ -24,7 +24,9 @@ class Test : LinearOpMode() {
         val rightFront = hardwareMap.get(DcMotor::class.java, "right_front")
         val leftBack = hardwareMap.get(DcMotor::class.java, "left_back")
         val rightBack = hardwareMap.get(DcMotor::class.java, "right_back")
-        val launch1 = hardwareMap.get(DcMotor::class.java, "launch")
+
+        val launch1 = hardwareMap.get(DcMotor::class.java, "launch1")
+        val launch2 = hardwareMap.get(DcMotor::class.java, "launch2")
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -33,6 +35,7 @@ class Test : LinearOpMode() {
         rightFront.direction = DcMotorSimple.Direction.REVERSE
         rightBack.direction = DcMotorSimple.Direction.REVERSE
         //launch1.direction = DcMotorSimple.Direction.FORWARD
+        launch2.direction = DcMotorSimple.Direction.REVERSE
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart()
@@ -68,7 +71,19 @@ class Test : LinearOpMode() {
             leftBack.power = leftPower
             leftFront.power = leftPower
 
-            if(gamepad1.dpad_down) launch1.power = 1.0
+            //launching input based on up & down on dpad
+            if(gamepad1.dpad_down) {
+                launch1.power = 1.0
+                launch2.power = 2.0
+            }
+            else if(gamepad1.dpad_up) {
+                launch1.power = -1.0
+                launch2.power = -1.0
+            }
+            else {
+                launch1.power = 0.0
+                launch2.power = 0.0
+            }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: $runtime")
