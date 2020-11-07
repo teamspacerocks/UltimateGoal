@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
+import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap
+import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry
 
 class meca(){
-	lateinit var motors;
+    private val runtime = ElapsedTime()
+//	lateinit var motors;
 	fun init(){
-		val 
         telemetry.addData("Status", "Initialized")
         telemetry.update()
 
@@ -31,10 +33,12 @@ class meca(){
         rightBack.direction = DcMotorSimple.Direction.REVERSE
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart()
+//        waitForStart()
         runtime.reset()
 
         // run until the end of the match (driver presses STOP)
+        //this class doesn't extend opmode or linearopmode so stuff that relates to that has to be commented out
+        /*
         while (opModeIsActive()) {
 
             // Setup a variable for each drive wheel to save power level for telemetry
@@ -67,5 +71,7 @@ class meca(){
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower)
             telemetry.update()
         }
+
+         */
     }
 }
