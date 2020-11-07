@@ -20,10 +20,10 @@ class meca(){
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
 
-        var leftFront = hardwareMap.get(DcMotor::class.java, "left_front")
-        var rightFront = hardwareMap.get(DcMotor::class.java, "right_front")
-        var leftBack = hardwareMap.get(DcMotor::class.java, "left_back")
-        var rightBack = hardwareMap.get(DcMotor::class.java, "right_back")
+        var leftFront:DcMotor = hardwareMap.get(DcMotor::class.java, "left_front")
+        var rightFront:DcMotor = hardwareMap.get(DcMotor::class.java, "right_front")
+        var leftBack:DcMotor = hardwareMap.get(DcMotor::class.java, "left_back")
+        var rightBack:DcMotor = hardwareMap.get(DcMotor::class.java, "right_back")
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
