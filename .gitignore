@@ -89,5 +89,5 @@ lint/tmp/
 .gitsecret/keys/random_seed
 !*.secret
 
-#key
-TeamCode/src/main/java/org/firstinspires/ftc/teamcode/key
+# key
+TeamCode/src/main/java/org/firstinspires/ftc/teamcode/KeyGet.java
