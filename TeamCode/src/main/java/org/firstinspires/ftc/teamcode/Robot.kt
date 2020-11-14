@@ -47,8 +47,8 @@ class Robot(){
     
     private fun encode(vararg motors:DcMotor) {
         for ( motor in motors ) {
-            motor.direction = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-            motor.direction = DcMotor.RunMode.RUN_USING_ENCODER
+            motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
         }
     }
     
