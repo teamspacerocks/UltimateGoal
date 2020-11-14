@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap
 import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry
 
-class Robot(){
+class Robot(env : LinearOpMode){
     private val runtime = ElapsedTime()
     
     lateinit var driver:Collection<DcMotor>
     lateinit var launcher:Collection<DcMotor>
     lateinit var intake:DcMotor	
 
-    fun init(env : LinearOpMode) {
+    fun init() {
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration

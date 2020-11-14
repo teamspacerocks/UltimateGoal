@@ -11,11 +11,11 @@ import com.qualcomm.robotcore.util.Range
 class DriverControlled : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
-    private val robot = Robot()
+    private val robot = Robot(this)
 
     override fun runOpMode() {
 
-        robot.init(this)
+        robot.init()
         telemetry.addData("Status:", "Initialized")
         telemetry.update()
 
