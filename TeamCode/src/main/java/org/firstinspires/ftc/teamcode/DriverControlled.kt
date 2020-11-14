@@ -68,7 +68,7 @@ class DriverControlled : LinearOpMode() {
     }
     fun wait(seconds: Double) {
         while (runtime.seconds() < seconds && opModeIsActive()) {
-            telemetry.addData("ajsdkf","jeio")
+            telemetry.addData("waiting for","%d seconds", seconds-runtime.seconds())
             telemetry.update()
         }
     }
