@@ -86,3 +86,8 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+.gitsecret/keys/random_seed
+!*.secret
+
+#key
+TeamCode/src/main/java/org/firstinspires/ftc/teamcode/key
