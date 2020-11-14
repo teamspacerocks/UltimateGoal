@@ -90,4 +90,4 @@ lint/tmp/
 !*.secret
 
 # key
-TeamCode/src/main/java/org/firstinspires/ftc/teamcode/KeyGet.java
+TeamCode/src/main/java/org/firstinspires/ftc/teamcode/KeyGet
