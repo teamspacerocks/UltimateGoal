@@ -4,15 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry
 
-class Robot(env : LinearOpMode){
+class Robot(_env : LinearOpMode){
+
     private val runtime = ElapsedTime()
+    private val env = _env
     
-    lateinit var driver:Map<String, DcMotor>
-    lateinit var launcher:Map<String, DcMotor>
-    lateinit var intake:DcMotor	
+    private lateinit var driver:Map<String, DcMotor>
+    private lateinit var launcher:Map<String, DcMotor>
+    lateinit var intake:DcMotor
 
     fun init() {
 
@@ -35,18 +35,19 @@ class Robot(env : LinearOpMode){
         intake = getMotor("intake")
 
         //set runmodes
-        encode(*launcher)
+        encode(*launcher.values.toTypedArray())
         reverse(driver["RF"],driver["RB"],launcher["R"])
 
     }
     
-    private fun getMotor(name):DcMotor {
+    private fun getMotor(name:String):DcMotor {
+
         return env.hardwareMap.get(DcMotor::class.java,name)
     }
     
-    private fun reverse(vararg motors:DcMotor) {
+    private fun reverse(vararg motors:DcMotor?) {
         for ( motor in motors ) {
-            motor.direction = DcMotorSimple.Direction.REVERSE
+            motor?.direction = DcMotorSimple.Direction.REVERSE
         }
     }
     
@@ -58,14 +59,14 @@ class Robot(env : LinearOpMode){
     }
     
     fun setLaunchPower(power:Double = 0.0) {
-        for ( motor in launcher ) {
+        for ( motor in launcher.values ) {
             motor.power = power
         }
     }
 
     fun setDrivePower(power:Map<String,Double>) {
         for ( location in power.keys ) {
-            driver[location].power = power[location]
+            driver[location]?.power = power[location]!!
         }
     }
 
