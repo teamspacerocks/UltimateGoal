@@ -11,9 +11,14 @@ import com.qualcomm.robotcore.util.Range
 class DriverControlled : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
+    private val robot = Robot()
 
     override fun runOpMode() {
-        Robot.init()
+        wait(5.0);
+
+        robot.init(this)
+        telemetry.addData("Status:", "Initialized")
+        telemetry.update()
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart()
@@ -21,7 +26,6 @@ class DriverControlled : LinearOpMode() {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
             // Setup a variable for each drive wheel to save power level for telemetry
             var leftPower: Double
             var rightPower: Double
@@ -42,13 +46,13 @@ class DriverControlled : LinearOpMode() {
             // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-            Robot.rightFront.power = rightPower
-            Robot.rightBack.power = rightPower
-            Robot.leftBack.power = leftPower
-            Robot.leftFront.power = leftPower
+            robot.rightFront.power = rightPower
+            robot.rightBack.power = rightPower
+            robot.leftBack.power = leftPower
+            robot.leftFront.power = leftPower
 
             // shooter
-            Robot.setLaunchPower(
+            robot.setLaunchPower(
                     if(gamepad2.y && gamepad2.x) 0.0
                     else if(gamepad2.y) 1.0
                     else if(gamepad2.x) -1.0
@@ -59,6 +63,13 @@ class DriverControlled : LinearOpMode() {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: $runtime")
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower)
+            telemetry.update()
+        }
+
+    }
+    fun wait(seconds: Double) {
+        while (runtime.seconds() < seconds && opModeIsActive()) {
+            telemetry.addData("ajsdkf","jeio")
             telemetry.update()
         }
     }
