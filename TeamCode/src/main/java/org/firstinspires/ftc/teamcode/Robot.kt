@@ -12,6 +12,7 @@ class Robot(){
     
     lateinit var driver:Collection<DcMotor>
     lateinit var launcher:Collection<DcMotor>
+    lateinit var intake:DcMotor	
 
     fun init(env : LinearOpMode) {
 
@@ -20,20 +21,22 @@ class Robot(){
         // step (using the FTC Robot Controller app on the phone).
 
         driver = mapOf(
-            "lf" to getMotor("left_front"),
-            "rf" to getMotor("right_front"),
-            "lb" to getMotor("left_back"),
-            "rb" to getMotor("right_back"),
+            "LF" to getMotor("left_front"),
+            "RF" to getMotor("right_front"),
+            "LB" to getMotor("left_back"),
+            "RB" to getMotor("right_back"),
         )
 
         launcher = mapOf(
-            "l" to getMotor("launch1"),
-            "r" to getMotor("launch2"),
+            "L" to getMotor("launch1"),
+            "R" to getMotor("launch2"),
         )
+        
+        intake = getMotor("intake")
 
         //set runmodes
         encode(*launcher)
-        reverse(driver["rf"],driver["rb"],launcher["right"])
+        reverse(driver["RF"],driver["RB"],launcher["R"])
 
     }
     
