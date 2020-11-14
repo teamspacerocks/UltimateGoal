@@ -58,6 +58,11 @@ class DriverControlled : LinearOpMode() {
                     else 0.0
             )
 
+            // intake
+            robot.intake.power = 
+                    if (gamepad1.dpad_up) 1.0
+                    else if(gamepad1.dpad_down) -1.0
+                    else 0.0
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: $runtime")

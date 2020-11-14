@@ -16,6 +16,7 @@ class Robot(){
 
     lateinit var launch1:DcMotor
     lateinit var launch2:DcMotor
+    lateinit var intake:DcMotor
 
 
     fun init(env : LinearOpMode) {
@@ -31,6 +32,7 @@ class Robot(){
 
         launch1 = env.hardwareMap.get(DcMotor::class.java, "launch1")
         launch2 = env.hardwareMap.get(DcMotor::class.java, "launch2")
+        intake = env.hardwareMap.get(DcMotor::class.java, "intake")
 
 
         //set runmodes
@@ -56,7 +58,6 @@ class Robot(){
         launch1.power = p
         launch2.power = p
     }
-    //a
 
 
 }
