@@ -18,7 +18,7 @@ class Robot(){
     lateinit var launch2:DcMotor
 
 
-    fun init(env : LinearOpMode){
+    fun init(env : LinearOpMode) {
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -34,21 +34,22 @@ class Robot(){
 
 
         //set runmodes
-        launch1.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        launch2.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-
-        launch1.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        launch2.mode = DcMotor.RunMode.RUN_USING_ENCODER
-
-        //leftFront.direction = DcMotorSimple.Direction.FORWARD
-        //leftBack.direction = DcMotorSimple.Direction.FORWARD //Commented out for redundancy
-
+        encode(launch1,launch2)
         reverse(rightFront,rightBack,launch2)
 
     }
     
     private fun reverse(vararg motors:DcMotor) {
-        for ( motor in motors ) motor.direction = DcMotorSimple.Direction.REVERSE
+        for ( motor in motors ) {
+            motor.direction = DcMotorSimple.Direction.REVERSE
+        }
+    }
+    
+    private fun encode(vararg motors:DcMotor) {
+        for ( motor in motors ) {
+            motor.direction = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            motor.direction = DcMotor.RunMode.RUN_USING_ENCODER
+        }
     }
     
     fun setLaunchPower(p:Double = 0.0) {
