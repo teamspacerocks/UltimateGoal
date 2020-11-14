@@ -10,8 +10,8 @@ import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry
 class Robot(env : LinearOpMode){
     private val runtime = ElapsedTime()
     
-    lateinit var driver:Collection<DcMotor>
-    lateinit var launcher:Collection<DcMotor>
+    lateinit var driver:Map<String, DcMotor>
+    lateinit var launcher:Map<String, DcMotor>
     lateinit var intake:DcMotor	
 
     fun init() {
