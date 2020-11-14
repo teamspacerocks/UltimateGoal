@@ -24,13 +24,13 @@ class Robot(){
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
 
-        var leftFront = env.hardwareMap.get(DcMotor::class.java, "left_front")
-        var rightFront = env.hardwareMap.get(DcMotor::class.java, "right_front")
-        var leftBack = env.hardwareMap.get(DcMotor::class.java, "left_back")
-        var rightBack = env.hardwareMap.get(DcMotor::class.java, "right_back")
+        leftFront = env.hardwareMap.get(DcMotor::class.java, "left_front")
+        rightFront = env.hardwareMap.get(DcMotor::class.java, "right_front")
+        leftBack = env.hardwareMap.get(DcMotor::class.java, "left_back")
+        rightBack = env.hardwareMap.get(DcMotor::class.java, "right_back")
 
-        var launch1:DcMotor = env.hardwareMap.get(DcMotor::class.java, "launch1")
-        var launch2:DcMotor = env.hardwareMap.get(DcMotor::class.java, "launch2")
+        launch1 = env.hardwareMap.get(DcMotor::class.java, "launch1")
+        launch2 = env.hardwareMap.get(DcMotor::class.java, "launch2")
 
 
         //set runmodes
@@ -47,7 +47,7 @@ class Robot(){
 
     }
     
-    fun reverse(vararg motors:DcMotor) {
+    private fun reverse(vararg motors:DcMotor) {
         for ( motor in motors ) motor.direction = DcMotorSimple.Direction.REVERSE
     }
     

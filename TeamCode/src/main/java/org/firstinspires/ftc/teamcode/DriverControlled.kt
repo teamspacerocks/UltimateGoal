@@ -14,7 +14,6 @@ class DriverControlled : LinearOpMode() {
     private val robot = Robot()
 
     override fun runOpMode() {
-        wait(5.0);
 
         robot.init(this)
         telemetry.addData("Status:", "Initialized")
@@ -23,6 +22,7 @@ class DriverControlled : LinearOpMode() {
         // Wait for the game to start (driver presses PLAY)
         waitForStart()
         runtime.reset()
+        wait(5.0)
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
