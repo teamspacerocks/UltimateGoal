@@ -43,12 +43,14 @@ class Robot(){
         //leftFront.direction = DcMotorSimple.Direction.FORWARD
         //leftBack.direction = DcMotorSimple.Direction.FORWARD //Commented out for redundancy
 
-        rightFront.direction = DcMotorSimple.Direction.REVERSE
-        rightBack.direction = DcMotorSimple.Direction.REVERSE
-
-        launch2.direction = DcMotorSimple.Direction.REVERSE
+        reverse(rightFront,rightBack,launch2)
 
     }
+    
+    fun reverse(vararg motors:DcMotor) {
+        for ( motor in motors ) motor.direction = DcMotorSimple.Direction.REVERSE
+    }
+    
     fun setLaunchPower(p:Double = 0.0) {
         launch1.power = p
         launch2.power = p
