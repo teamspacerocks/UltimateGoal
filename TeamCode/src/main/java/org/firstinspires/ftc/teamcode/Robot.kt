@@ -9,15 +9,9 @@ import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry
 
 class Robot(){
     private val runtime = ElapsedTime()
-    lateinit var leftFront:DcMotor
-    lateinit var rightFront:DcMotor
-    lateinit var leftBack:DcMotor
-    lateinit var rightBack:DcMotor
-
-    lateinit var launch1:DcMotor
-    lateinit var launch2:DcMotor
-    lateinit var intake:DcMotor
-
+    
+    lateinit var driver:Collection<DcMotor>
+    lateinit var launcher:Collection<DcMotor>
 
     fun init(env : LinearOpMode) {
 
@@ -25,20 +19,26 @@ class Robot(){
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
 
-        leftFront = env.hardwareMap.get(DcMotor::class.java, "left_front")
-        rightFront = env.hardwareMap.get(DcMotor::class.java, "right_front")
-        leftBack = env.hardwareMap.get(DcMotor::class.java, "left_back")
-        rightBack = env.hardwareMap.get(DcMotor::class.java, "right_back")
+        driver = mapOf(
+            "lf" to getMotor("left_front"),
+            "rf" to getMotor("right_front"),
+            "lb" to getMotor("left_back"),
+            "rb" to getMotor("right_back"),
+        )
 
-        launch1 = env.hardwareMap.get(DcMotor::class.java, "launch1")
-        launch2 = env.hardwareMap.get(DcMotor::class.java, "launch2")
-        intake = env.hardwareMap.get(DcMotor::class.java, "intake")
-
+        launcher = mapOf(
+            "l" to getMotor("launch1"),
+            "r" to getMotor("launch2"),
+        )
 
         //set runmodes
-        encode(launch1,launch2)
-        reverse(rightFront,rightBack,launch2)
+        encode(*launcher)
+        reverse(driver["rf"],driver["rb"],launcher["right"])
 
+    }
+    
+    private fun getMotor(name):DcMotor {
+        return env.hardwareMap.get(DcMotor::class.java,name)
     }
     
     private fun reverse(vararg motors:DcMotor) {
@@ -54,10 +54,16 @@ class Robot(){
         }
     }
     
-    fun setLaunchPower(p:Double = 0.0) {
-        launch1.power = p
-        launch2.power = p
+    fun setLaunchPower(power:Double = 0.0) {
+        for ( motor in launcher ) {
+            motor.power = power
+        }
     }
 
+    fun setDrivePower(power:Map<String,Double>) {
+        for ( location in power.keys ) {
+            driver[location].power = power[location]
+        }
+    }
 
 }
