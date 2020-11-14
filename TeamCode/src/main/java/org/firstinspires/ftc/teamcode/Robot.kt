@@ -36,7 +36,7 @@ class Robot(_env : LinearOpMode){
 
         //set runmodes
         encode(*launcher.values.toTypedArray())
-        reverse(driver["RF"],driver["RB"],launcher["R"])
+        reverse(driver["RF"]!!,driver["RB"]!!,launcher["R"]!!)
 
     }
     
@@ -45,9 +45,9 @@ class Robot(_env : LinearOpMode){
         return env.hardwareMap.get(DcMotor::class.java,name)
     }
     
-    private fun reverse(vararg motors:DcMotor?) {
+    private fun reverse(vararg motors:DcMotor) {
         for ( motor in motors ) {
-            motor?.direction = DcMotorSimple.Direction.REVERSE
+            motor.direction = DcMotorSimple.Direction.REVERSE
         }
     }
     
@@ -66,7 +66,7 @@ class Robot(_env : LinearOpMode){
 
     fun setDrivePower(power:Map<String,Double>) {
         for ( location in power.keys ) {
-            driver[location]?.power = power[location]!!
+            driver[location]!!.power = power[location]!!
         }
     }
 
