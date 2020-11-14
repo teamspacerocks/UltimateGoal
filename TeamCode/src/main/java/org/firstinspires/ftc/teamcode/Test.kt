@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 
-@TeleOp(name = "basicDrive", group = "Tele") //@Disabled
+@TeleOp(name = "basicDrive", group = "Tele") @Disabled
 class Test : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
