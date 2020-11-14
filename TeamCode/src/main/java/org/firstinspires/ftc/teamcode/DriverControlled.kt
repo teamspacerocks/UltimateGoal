@@ -6,39 +6,20 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry
 
-class meca(){
+@TeleOp(name = "TeleOp", group = "Tele") //@Disabled
+class DriverControlled : LinearOpMode() {
+    // Declare OpMode members.
     private val runtime = ElapsedTime()
-//	lateinit var motors;
-	fun init(){
-        telemetry.addData("Status", "Initialized")
-        telemetry.update()
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-
-        var leftFront:DcMotor = hardwareMap.get(DcMotor::class.java, "left_front")
-        var rightFront:DcMotor = hardwareMap.get(DcMotor::class.java, "right_front")
-        var leftBack:DcMotor = hardwareMap.get(DcMotor::class.java, "left_back")
-        var rightBack:DcMotor = hardwareMap.get(DcMotor::class.java, "right_back")
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        //leftFront.direction = DcMotorSimple.Direction.FORWARD
-        //leftBack.direction = DcMotorSimple.Direction.FORWARD //Commented out for redundency
-        rightFront.direction = DcMotorSimple.Direction.REVERSE
-        rightBack.direction = DcMotorSimple.Direction.REVERSE
+    override fun runOpMode() {
+        Robot.init()
 
         // Wait for the game to start (driver presses PLAY)
-//        waitForStart()
+        waitForStart()
         runtime.reset()
 
         // run until the end of the match (driver presses STOP)
-        //this class doesn't extend opmode or linearopmode so stuff that relates to that has to be commented out
-        /*
         while (opModeIsActive()) {
 
             // Setup a variable for each drive wheel to save power level for telemetry
@@ -51,7 +32,7 @@ class meca(){
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             val drive = -gamepad1.left_stick_y.toDouble()
-            val turn = gamepad1.right_stick_x.toDouble()
+            val turn = gamepad1.left_stick_x.toDouble()
             leftPower = Range.clip(drive + turn, -1.0, 1.0)
             rightPower = Range.clip(drive - turn, -1.0, 1.0)
 
@@ -61,17 +42,24 @@ class meca(){
             // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-            rightFront.power = rightPower
-            rightBack.power = rightPower
-            leftBack.power = leftPower
-            leftFront.power = leftPower
+            Robot.rightFront.power = rightPower
+            Robot.rightBack.power = rightPower
+            Robot.leftBack.power = leftPower
+            Robot.leftFront.power = leftPower
+
+            // shooter
+            Robot.setLaunchPower(
+                    if(gamepad2.y && gamepad2.x) 0.0
+                    else if(gamepad2.y) 1.0
+                    else if(gamepad2.x) -1.0
+                    else 0.0
+            )
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: $runtime")
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower)
             telemetry.update()
         }
-
-         */
     }
 }
