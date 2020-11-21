@@ -2,10 +2,9 @@ package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
+import org.firstinspires.ftc.teamcode.Motors.*
 
 @TeleOp(name = "TeleOp", group = "Tele") //@Disabled
 class DriverControlled : LinearOpMode() {
@@ -61,10 +60,10 @@ class DriverControlled : LinearOpMode() {
 
             // Send calculated power to wheels
             robot.setDrivePower(mapOf(
-                    "LF" to LF,
-                    "RF" to RF,
-                    "LB" to LB,
-                    "RB" to RB,
+                    LEFTBACK to LF,
+                    RIGHTBACK to RF,
+                    LEFTBACK to LB,
+                    RIGHTBACK to RB,
             ))
 
             // shooter

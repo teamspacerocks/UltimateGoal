@@ -4,14 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.teamcode.Motors.*
 
 class Robot(_env : LinearOpMode){
 
     private val runtime = ElapsedTime()
     private val env = _env
     
-    private lateinit var driver:Map<String, DcMotor>
-    private lateinit var launcher:Map<String, DcMotor>
+    private lateinit var driver:Map<Motors, DcMotor>
+    private lateinit var launcher:Map<Motors, DcMotor>
     lateinit var intake:DcMotor
 
     fun init() {
@@ -21,22 +22,22 @@ class Robot(_env : LinearOpMode){
         // step (using the FTC Robot Controller app on the phone).
 
         driver = mapOf(
-            "LF" to getMotor("left_front"),
-            "RF" to getMotor("right_front"),
-            "LB" to getMotor("left_back"),
-            "RB" to getMotor("right_back"),
+            LEFTFRONT to getMotor("left_front"),
+            RIGHTFRONT to getMotor("right_front"),
+            LEFTBACK to getMotor("left_back"),
+            RIGHTBACK to getMotor("right_back"),
         )
 
         launcher = mapOf(
-            "L" to getMotor("launch1"),
-            "R" to getMotor("launch2"),
+            LEFTLAUNCH to getMotor("launch1"),
+            RIGHTLAUNCH to getMotor("launch2"),
         )
         
         intake = getMotor("intake")
 
         //set runmodes
         encode(*launcher.values.toTypedArray())
-        reverse(driver["RF"]!!,driver["RB"]!!,launcher["R"]!!)
+        reverse(driver[RIGHTFRONT]!!,driver[RIGHTBACK]!!,launcher[RIGHTLAUNCH]!!)
 
     }
     
@@ -64,17 +65,17 @@ class Robot(_env : LinearOpMode){
         }
     }
 
-    fun setDrivePower(power:Map<String,Double>) {
+    fun setDrivePower(power:Map<Motors,Double>) {
         for ( location in power.keys ) {
             driver[location]!!.power = power[location]!!
         }
     }
 
     fun setDrivePower(LF:Double, RF:Double, LB:Double, RB:Double) {
-        driver["LF"]!!.power = LF
-        driver["RF"]!!.power = RF
-        driver["LB"]!!.power = LB
-        driver["RB"]!!.power = RB
+        driver[LEFTFRONT]!!.power = LF
+        driver[RIGHTBACK]!!.power = RF
+        driver[LEFTBACK]!!.power = LB
+        driver[RIGHTBACK]!!.power = RB
     }
 
     fun setDrivePower(p:Double) {
