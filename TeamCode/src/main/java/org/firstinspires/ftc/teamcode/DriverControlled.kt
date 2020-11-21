@@ -28,10 +28,10 @@ class DriverControlled : LinearOpMode() {
             var leftPower: Double
             var rightPower: Double
 
-            var LF:Double
-            var RF:Double
-            var LB:Double
-            var RB:Double
+            var lf:Double
+            var rf:Double
+            var lb:Double
+            var rb:Double
 
             var forward:Double
             var right:Double
@@ -42,16 +42,16 @@ class DriverControlled : LinearOpMode() {
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             val drive = -gamepad1.left_stick_y.toDouble()
-            val turn = gamepad1.left_stick_x.toDouble()
+            val turn = -gamepad1.left_stick_x.toDouble()
             leftPower = Range.clip(drive + turn, -1.0, 1.0)
             rightPower = Range.clip(drive - turn, -1.0, 1.0)
 
             forward = -gamepad1.right_stick_y.toDouble()
-            right = gamepad1.left_stick_x.toDouble()
-            LF = forward+right + leftPower
-            RF = forward-right + rightPower
-            LB = forward-right + leftPower
-            RB = forward+right + rightPower
+            right = -gamepad1.right_stick_x.toDouble()
+            lf = forward + right + leftPower
+            rf = forward - right + rightPower
+            lb = forward - right + leftPower
+            rb = forward + right + rightPower
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -60,10 +60,10 @@ class DriverControlled : LinearOpMode() {
 
             // Send calculated power to wheels
             robot.setDrivePower(mapOf(
-                    LEFTBACK to LF,
-                    RIGHTBACK to RF,
-                    LEFTBACK to LB,
-                    RIGHTBACK to RB,
+                    LEFTFRONT to lf,
+                    RIGHTFRONT to rf,
+                    LEFTBACK to lb,
+                    RIGHTBACK to rb,
             ))
 
             // shooter
@@ -75,15 +75,19 @@ class DriverControlled : LinearOpMode() {
             )
 
             // intake
-            robot.intake.power = 
-                    if (gamepad1.dpad_up) 1.0
-                    else if(gamepad1.dpad_down) -1.0
-                    else 0.0
+            robot.intake.power =
+                    when {
+                        gamepad1.dpad_up -> 1.0
+                        gamepad1.dpad_down -> -1.0
+                        else -> 0.0
+                    }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: $runtime")
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower)
-            telemetry.update()
+            telemetry.addData("left stick x", gamepad1.left_stick_x.toDouble())
+            telemetry.addData("right stick x", gamepad1.right_stick_x.toDouble())
+            telemetry.addData("powers", "LF: $lf, RF: $rf, LB: $lb, RB: $rb")
+            telemetry.update() 
         }
 
     }

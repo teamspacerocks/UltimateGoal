@@ -37,7 +37,9 @@ class Robot(_env : LinearOpMode){
 
         //set runmodes
         encode(*launcher.values.toTypedArray())
-        reverse(driver[RIGHTFRONT]!!,driver[RIGHTBACK]!!,launcher[RIGHTLAUNCH]!!)
+        reverse(driver.getValue(RIGHTFRONT),
+                driver.getValue(RIGHTBACK),
+                launcher.getValue(RIGHTLAUNCH))
 
     }
     
@@ -66,16 +68,16 @@ class Robot(_env : LinearOpMode){
     }
 
     fun setDrivePower(power:Map<Motors,Double>) {
-        for ( location in power.keys ) {
-            driver[location]!!.power = power[location]!!
+        for ( motor in power.keys ) {
+            driver.getValue(motor).power = power.getValue(motor)
         }
     }
 
     fun setDrivePower(LF:Double, RF:Double, LB:Double, RB:Double) {
-        driver[LEFTFRONT]!!.power = LF
-        driver[RIGHTBACK]!!.power = RF
-        driver[LEFTBACK]!!.power = LB
-        driver[RIGHTBACK]!!.power = RB
+        driver.getValue(LEFTFRONT).power = LF
+        driver.getValue(RIGHTFRONT).power = RF
+        driver.getValue(LEFTBACK).power = LB
+        driver.getValue(RIGHTBACK).power = RB
     }
 
     fun setDrivePower(p:Double) {
