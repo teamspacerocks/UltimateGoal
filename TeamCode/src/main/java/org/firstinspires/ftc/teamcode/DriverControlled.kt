@@ -29,6 +29,14 @@ class DriverControlled : LinearOpMode() {
             var leftPower: Double
             var rightPower: Double
 
+            var LF:Double
+            var RF:Double
+            var LB:Double
+            var RB:Double
+
+            var forward:Double
+            var right:Double
+
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
@@ -39,6 +47,13 @@ class DriverControlled : LinearOpMode() {
             leftPower = Range.clip(drive + turn, -1.0, 1.0)
             rightPower = Range.clip(drive - turn, -1.0, 1.0)
 
+            forward = -gamepad1.right_stick_y.toDouble()
+            right = gamepad1.left_stick_x.toDouble()
+            LF = forward+right + leftPower
+            RF = forward-right + rightPower
+            LB = forward-right + leftPower
+            RB = forward+right + rightPower
+
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
             // leftPower  = -gamepad1.left_stick_y ;
@@ -46,10 +61,10 @@ class DriverControlled : LinearOpMode() {
 
             // Send calculated power to wheels
             robot.setDrivePower(mapOf(
-                    "LF" to leftPower,
-                    "LB" to leftPower,
-                    "RF" to rightPower,
-                    "RB" to rightPower,
+                    "LF" to LF,
+                    "RF" to RF,
+                    "LB" to LB,
+                    "RB" to RB,
             ))
 
             // shooter

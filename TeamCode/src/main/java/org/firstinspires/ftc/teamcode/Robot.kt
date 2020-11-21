@@ -70,4 +70,19 @@ class Robot(_env : LinearOpMode){
         }
     }
 
+    fun setDrivePower(LF:Double, RF:Double, LB:Double, RB:Double) {
+        driver["LF"]!!.power = LF
+        driver["RF"]!!.power = RF
+        driver["LB"]!!.power = LB
+        driver["RB"]!!.power = RB
+    }
+
+    fun setDrivePower(p:Double) {
+        setDrivePower(p, p, p, p)
+    }
+
+    fun off() {
+        setDrivePower(0.0)
+    }
+
 }
