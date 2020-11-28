@@ -14,10 +14,9 @@ class Robot(_env : LinearOpMode){
     
     private lateinit var driver:Map<Motors, DcMotor>
     private lateinit var launcher:Map<Motors, DcMotor>
-    private lateinit var intake:DcMotor
 
-    private lateinit var servo1:CRServo
-    private lateinit var servo2:CRServo
+    private lateinit var intake:DcMotor
+    private lateinit var conveyor:DcMotor
 
     fun init() {
 
@@ -38,10 +37,7 @@ class Robot(_env : LinearOpMode){
         )
 
         intake = getMotor("intake")
-
-        servo1 = env.hardwareMap.get(CRServo::class.java, "servo1")
-        servo2 = env.hardwareMap.get(CRServo::class.java, "servo2")
-
+        conveyor = getMotor("conveyor")
 
         //set runmodes
         encode(*launcher.values.toTypedArray())
@@ -81,6 +77,10 @@ class Robot(_env : LinearOpMode){
         }
     }
 
+    fun conveyor(p: Double){
+        conveyor.power = p
+    }
+
     fun setDrivePower(power:Map<Motors,Double>) {
         for ( motor in power.keys ) {
             driver.getValue(motor).power = power.getValue(motor)
@@ -98,8 +98,6 @@ class Robot(_env : LinearOpMode){
 
     fun intake(p: Double){
         intake.power = p
-        servo1.power = p
-        servo2.power = -p
     }
 
     private fun setDrivePower(p:Double) {
