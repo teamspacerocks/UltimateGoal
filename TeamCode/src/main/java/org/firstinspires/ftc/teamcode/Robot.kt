@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
@@ -13,7 +14,8 @@ class Robot(_env : LinearOpMode){
     
     private lateinit var driver:Map<Motors, DcMotor>
     private lateinit var launcher:Map<Motors, DcMotor>
-    lateinit var intake:DcMotor
+    private lateinit var servo1:CRServo
+    private lateinit var servo2:CRServo
 
     fun init() {
 
@@ -32,8 +34,10 @@ class Robot(_env : LinearOpMode){
             LEFTLAUNCH to getMotor("launch1"),
             RIGHTLAUNCH to getMotor("launch2"),
         )
-        
-        intake = getMotor("intake")
+
+        servo1 = env.hardwareMap.get(CRServo::class.java, "servo1")
+        servo2 = env.hardwareMap.get(CRServo::class.java, "servo2")
+
 
         //set runmodes
         encode(*launcher.values.toTypedArray())
@@ -78,6 +82,11 @@ class Robot(_env : LinearOpMode){
         driver.getValue(RIGHTFRONT).power = RF
         driver.getValue(LEFTBACK).power = LB
         driver.getValue(RIGHTBACK).power = RB
+    }
+
+    fun intake(p: Double){
+        servo1.power = p
+        servo2.power = -p
     }
 
     fun setDrivePower(p:Double) {
