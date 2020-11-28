@@ -14,6 +14,8 @@ class Robot(_env : LinearOpMode){
     
     private lateinit var driver:Map<Motors, DcMotor>
     private lateinit var launcher:Map<Motors, DcMotor>
+    private lateinit var intake:DcMotor
+
     private lateinit var servo1:CRServo
     private lateinit var servo2:CRServo
 
@@ -34,6 +36,8 @@ class Robot(_env : LinearOpMode){
             LEFTLAUNCH to getMotor("launch1"),
             RIGHTLAUNCH to getMotor("launch2"),
         )
+
+        intake = getMotor("intake")
 
         servo1 = env.hardwareMap.get(CRServo::class.java, "servo1")
         servo2 = env.hardwareMap.get(CRServo::class.java, "servo2")
@@ -84,7 +88,10 @@ class Robot(_env : LinearOpMode){
         driver.getValue(RIGHTBACK).power = RB
     }
 
+
+
     fun intake(p: Double){
+        intake.power = p
         servo1.power = p
         servo2.power = -p
     }
