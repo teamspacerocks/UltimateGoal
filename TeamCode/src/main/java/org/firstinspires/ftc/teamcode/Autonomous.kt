@@ -22,10 +22,7 @@ class Autonomous : LinearOpMode() {
 
         // run until the end of the match (driver presses STOP)
         sleep(100)
-        robot.setDrivePower(0.8)
-        sleep(2000)
-        robot.off()
-
+        robot.travel(0.8, 2000)
     }
 
 }

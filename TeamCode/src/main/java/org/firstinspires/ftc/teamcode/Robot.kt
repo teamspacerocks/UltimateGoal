@@ -68,7 +68,13 @@ class Robot(_env : LinearOpMode){
             motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
         }
     }
-    
+
+    fun travel(power: Double = 1.0, seconds: Long){
+        setDrivePower(power)
+        env.sleep(seconds)
+        setDrivePower(0.0)
+    }
+
     fun setLaunchPower(power:Double = 0.0) {
         for ( motor in launcher.values ) {
             motor.power = power
@@ -81,7 +87,7 @@ class Robot(_env : LinearOpMode){
         }
     }
 
-    fun setDrivePower(LF:Double, RF:Double, LB:Double, RB:Double) {
+    private fun setDrivePower(LF:Double, RF:Double, LB:Double, RB:Double) {
         driver.getValue(LEFTFRONT).power = LF
         driver.getValue(RIGHTFRONT).power = RF
         driver.getValue(LEFTBACK).power = LB
@@ -96,12 +102,13 @@ class Robot(_env : LinearOpMode){
         servo2.power = -p
     }
 
-    fun setDrivePower(p:Double) {
+    private fun setDrivePower(p:Double) {
         setDrivePower(p, p, p, p)
     }
 
     fun off() {
         setDrivePower(0.0)
+        intake(0.0)
     }
 
 }
