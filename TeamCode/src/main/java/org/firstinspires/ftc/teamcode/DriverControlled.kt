@@ -59,7 +59,7 @@ class DriverControlled : LinearOpMode() {
             // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-            robot.setDrivePower(mapOf(
+            robot.drive(mapOf(
                     LEFTFRONT to lf,
                     RIGHTFRONT to rf,
                     LEFTBACK to lb,
@@ -67,7 +67,7 @@ class DriverControlled : LinearOpMode() {
             ))
 
             // shooter
-            robot.setLaunchPower(
+            robot.launch(
                     if(gamepad2.y && gamepad2.x) 0.0
                     else if(gamepad2.y) 1.0
                     else if(gamepad2.x) -1.0

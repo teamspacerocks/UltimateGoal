@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
@@ -66,12 +65,12 @@ class Robot(_env : LinearOpMode){
     }
 
     fun travel(power: Double = 1.0, seconds: Long){
-        setDrivePower(power)
+        drive(power)
         env.sleep(seconds)
-        setDrivePower(0.0)
+        drive(0.0)
     }
 
-    fun setLaunchPower(power:Double = 0.0) {
+    fun launch(power:Double = 0.0) {
         for ( motor in launcher.values ) {
             motor.power = power
         }
@@ -81,13 +80,13 @@ class Robot(_env : LinearOpMode){
         conveyor.power = p
     }
 
-    fun setDrivePower(power:Map<Motors,Double>) {
+    fun drive(power:Map<Motors,Double>) {
         for ( motor in power.keys ) {
             driver.getValue(motor).power = power.getValue(motor)
         }
     }
 
-    private fun setDrivePower(LF:Double, RF:Double, LB:Double, RB:Double) {
+    private fun drive(LF:Double, RF:Double, LB:Double, RB:Double) {
         driver.getValue(LEFTFRONT).power = LF
         driver.getValue(RIGHTFRONT).power = RF
         driver.getValue(LEFTBACK).power = LB
@@ -100,12 +99,12 @@ class Robot(_env : LinearOpMode){
         intake.power = p
     }
 
-    private fun setDrivePower(p:Double) {
-        setDrivePower(p, p, p, p)
+    private fun drive(p:Double) {
+        drive(p, p, p, p)
     }
 
     fun off() {
-        setDrivePower(0.0)
+        drive(0.0)
         intake(0.0)
     }
 
