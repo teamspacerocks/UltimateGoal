@@ -42,7 +42,8 @@ class Robot(_env : LinearOpMode){
         encode(*launcher.values.toTypedArray())
         reverse(driver.getValue(RIGHTFRONT),
                 driver.getValue(RIGHTBACK),
-                launcher.getValue(RIGHTLAUNCH))
+                launcher.getValue(RIGHTLAUNCH),
+            intake)
 
     }
     

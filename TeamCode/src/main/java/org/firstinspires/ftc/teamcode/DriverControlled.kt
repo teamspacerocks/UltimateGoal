@@ -11,6 +11,7 @@ class DriverControlled : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
     private val robot = Robot(this)
+    private var intakePower = 0.0 //for toggle function
 
     override fun runOpMode() {
 
@@ -75,16 +76,17 @@ class DriverControlled : LinearOpMode() {
             )
 
             // intake
-            robot.intake(
-                    when {
-                        gamepad1.dpad_up -> 1.0
-                        gamepad1.dpad_down -> -1.0
-                        else -> 0.0
-                    })
+            intakePower = when{
+                gamepad1.dpad_up    ->  1.0
+                gamepad1.dpad_down  -> -1.0
+                gamepad1.a          ->  0.0
+                else                -> intakePower
+            }
+            robot.intake(intakePower)
             robot.conveyor(when {
-                gamepad1.dpad_up -> 1.0
-                gamepad1.dpad_down -> -1.0
-                else -> 0.0
+                gamepad1.dpad_up    ->  1.0
+                gamepad1.dpad_down  -> -1.0
+                else                ->  0.0
             })
 
             // Show the elapsed game time and wheel power.
