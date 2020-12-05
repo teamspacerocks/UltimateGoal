@@ -11,15 +11,15 @@ class Robot(_env : LinearOpMode){
     private val runtime = ElapsedTime()
     private val env = _env
     
-    private lateinit val driver:Map<Motors, DcMotor>
-    private lateinit val launcher:Map<Motors, DcMotor>
+    private val driver:Map<Motors, DcMotor>
+    private val launcher:Map<Motors, DcMotor>
 
-    private lateinit val intake:DcMotor
-    private lateinit val conveyor:DcMotor
+    private val intake:DcMotor
+    private val conveyor:DcMotor
 
-    private lateinit val webcam: TensorWrapper
+    private val webcam: TensorWrapper
 
-    fun init() {
+    init {
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
