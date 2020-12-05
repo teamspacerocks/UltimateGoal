@@ -10,10 +10,12 @@ import org.firstinspires.ftc.teamcode.Motors.*
 class DriverControlled : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
-    private val robot = Robot(this)
+    private lateinit var robot : Robot
     private var intakePower = 0.0 //for toggle function
 
     override fun runOpMode() {
+
+        robot = Robot(this)
 
         telemetry.addData("Status:", "Initialized")
         telemetry.update()

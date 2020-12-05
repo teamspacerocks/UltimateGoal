@@ -5,18 +5,14 @@ import com.qualcomm.robotcore.hardware.DistanceSensor
 import androidx.core.graphics.ColorUtils
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 
-class Ring() {
+class Ring(c: ColorSensor, d: DistanceSensor) {
     
-    private val col:ColorSensor
-    private val dist:DistanceSensor
+    private val col:ColorSensor = c
+    private val dist:DistanceSensor = d
 
-    init {
-        col = getColorSensor("ring")//TODO: fix lines 14, 15, 24, 29
-        dist = getDistanceSensor("ring")
-    }
 
     fun count():Int{
-        var hsl = floatArrayOf(0.0f, 0.0f, 0.0f)
+        val hsl = floatArrayOf(0.0f, 0.0f, 0.0f)
         ColorUtils.RGBToHSL(
                 col.red(),
                 col.green(),

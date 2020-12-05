@@ -8,9 +8,11 @@ import com.qualcomm.robotcore.util.ElapsedTime
 class Autonomous : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
-    private val robot = Robot(this)
+    private lateinit var robot : Robot
 
     override fun runOpMode() {
+
+        robot = Robot(this)
 
         telemetry.addData("Status:", "Initialized")
         telemetry.update()
