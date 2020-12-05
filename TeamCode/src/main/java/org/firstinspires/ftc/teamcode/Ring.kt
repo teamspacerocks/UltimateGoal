@@ -3,14 +3,15 @@ package org.firstinspires.ftc.teamcode
 import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.DistanceSensor
 import androidx.core.graphics.ColorUtils
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 
 class Ring() {
     
-    private lateinit val col:ColorSensor
-    private lateinit val dist:DistanceSensor
+    private val col:ColorSensor
+    private val dist:DistanceSensor
 
-    fun init() {
-        col = getColorSensor("ring")
+    init {
+        col = getColorSensor("ring")//TODO: fix lines 14, 15, 24, 29
         dist = getDistanceSensor("ring")
     }
 
