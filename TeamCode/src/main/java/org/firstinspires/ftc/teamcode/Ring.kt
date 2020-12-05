@@ -10,7 +10,6 @@ class Ring(c: ColorSensor, d: DistanceSensor) {
     private val col:ColorSensor = c
     private val dist:DistanceSensor = d
 
-
     fun count():Int{
         val hsl = floatArrayOf(0.0f, 0.0f, 0.0f)
         ColorUtils.RGBToHSL(

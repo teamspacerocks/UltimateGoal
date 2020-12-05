@@ -61,11 +61,11 @@ class DriverControlled : LinearOpMode() {
             // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-            robot.drive(mapOf(
-                    LEFTFRONT to lf,
-                    RIGHTFRONT to rf,
-                    LEFTBACK to lb,
-                    RIGHTBACK to rb,
+            robot.drive(arrayOf(
+                    lf,
+                    rf,
+                    lb,
+                    rb,
             ))
 
             // shooter

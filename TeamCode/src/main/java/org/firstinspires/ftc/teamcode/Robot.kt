@@ -11,30 +11,37 @@ class Robot(_env : LinearOpMode){
     private val runtime = ElapsedTime()
     private val env = _env
     
-    private val driver:Map<Motors, DcMotor>
-    private val launcher:Map<Motors, DcMotor>
+    private val driver: Array<DcMotor>
+    private val launcher: Array<DcMotor>
 
-    private val intake:DcMotor
-    private val conveyor:DcMotor
+    private val intake: DcMotor
+    private val conveyor: DcMotor
 
     private val webcam: TensorWrapper
 
     init {
-
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
 
-        driver = mapOf(
-            LEFTFRONT to getMotor("left_front"),
-            RIGHTFRONT to getMotor("right_front"),
-            LEFTBACK to getMotor("left_back"),
-            RIGHTBACK to getMotor("right_back"),
+        /*
+        * WARNING:
+        *
+        * The enum Motors contains the index of each motor.
+        * After changing this, fix Motor's .i attribute for
+        * each Motor.
+        *
+        * */
+        driver = arrayOf(
+            getMotor(LF.s),
+            getMotor(RF.s),
+            getMotor(LB.s),
+            getMotor(RB.s)
         )
 
-        launcher = mapOf(
-            LEFTLAUNCH to getMotor("launch1"),
-            RIGHTLAUNCH to getMotor("launch2"),
+        launcher = arrayOf(
+            getMotor(L_LAUNCH.s),
+            getMotor(R_LAUNCH.s)
         )
 
         intake = getMotor("intake")
@@ -43,11 +50,11 @@ class Robot(_env : LinearOpMode){
         webcam = TensorWrapper(env)
 
         //set runmodes
-        encode(*launcher.values.toTypedArray())
+        encode(*launcher)
         reverse(
-            driver.getValue(RIGHTFRONT),
-            driver.getValue(RIGHTBACK),
-            launcher.getValue(RIGHTLAUNCH),
+            driver[RF.i],
+            driver[RB.i],
+            launcher[R_LAUNCH.i],
             intake
         )
 
@@ -83,7 +90,7 @@ class Robot(_env : LinearOpMode){
     }
 
     fun launch(power:Double = 0.0) {
-        for ( motor in launcher.values ) {
+        for ( motor in launcher ) {
             motor.power = power
         }
     }
@@ -92,17 +99,17 @@ class Robot(_env : LinearOpMode){
         conveyor.power = p
     }
     
-    fun drive(power:Map<Motors,Double>) {
-        for ( motor in power.keys ) {
-            driver.getValue(motor).power = power.getValue(motor)
+    fun drive(power: Array<Double>) {
+        for (i in power.indices) {
+            driver[i].power = power[i]
         }
     }
 
-    private fun drive(LF:Double, RF:Double, LB:Double, RB:Double) {
-        driver.getValue(LEFTFRONT).power = LF
-        driver.getValue(RIGHTFRONT).power = RF
-        driver.getValue(LEFTBACK).power = LB
-        driver.getValue(RIGHTBACK).power = RB
+    private fun drive(lf:Double, rf:Double, lb:Double, rb:Double) {
+        driver[LF.i].power = lf
+        driver[RF.i].power = rf
+        driver[LB.i].power = lb
+        driver[RB.i].power = rb
     }
 
 
