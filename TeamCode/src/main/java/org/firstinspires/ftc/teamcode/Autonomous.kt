@@ -12,7 +12,6 @@ class Autonomous : LinearOpMode() {
 
     override fun runOpMode() {
 
-        robot.init()
         telemetry.addData("Status:", "Initialized")
         telemetry.update()
 
