@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.Motors.*
+import com.qualcomm.robotcore.hardware.ColorSensor
+import com.qualcomm.robotcore.hardware.DistanceSensor
 
 class Robot(_env : LinearOpMode){
 
@@ -37,6 +39,8 @@ class Robot(_env : LinearOpMode){
 
         intake = getMotor("intake")
         conveyor = getMotor("conveyor")
+        colorSensor = getColorSensor("sensor")
+        distanceSensor = getDistanceSensor("sensor")
 
         //set runmodes
         encode(*launcher.values.toTypedArray())
@@ -48,8 +52,13 @@ class Robot(_env : LinearOpMode){
     }
     
     private fun getMotor(name:String):DcMotor {
-
         return env.hardwareMap.get(DcMotor::class.java,name)
+    }
+    private fun getColorSensor(name:String):ColorSensor {
+        return env.hardwareMap.get(ColorSensor::class.java,name)
+    }
+    private fun getDistanceSensor(name:String):DistanceSensor {
+        return env.hardwareMap.get(DistanceSensor::class.java,name)
     }
     
     private fun reverse(vararg motors:DcMotor) {
@@ -79,6 +88,23 @@ class Robot(_env : LinearOpMode){
 
     fun conveyor(p: Double){
         conveyor.power = p
+    }
+    
+    fun countRings():Int{
+        val rgb = listOf(
+            colorSensor.red(),
+            colorSensor.green(),
+            colorSensor.blue()
+        )
+        val hue = 0 //Need hue conversion formula
+        val isYellow = hue
+        if !isYellow return 0
+        
+        val distanceAboveGround = distanceSensor.getDistance(DistanceUnit.INCH)
+        when (distanceAboveGround) {
+            in 0.5 .. 1 ->  return 1
+            in 2 .. 3 -> return 3
+        }
     }
 
     fun drive(power:Map<Motors,Double>) {
