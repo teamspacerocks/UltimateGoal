@@ -11,13 +11,13 @@ class Robot(_env : LinearOpMode){
     private val runtime = ElapsedTime()
     private val env = _env
     
-    private lateinit var driver:Map<Motors, DcMotor>
-    private lateinit var launcher:Map<Motors, DcMotor>
+    private lateinit val driver:Map<Motors, DcMotor>
+    private lateinit val launcher:Map<Motors, DcMotor>
 
-    private lateinit var intake:DcMotor
-    private lateinit var conveyor:DcMotor
+    private lateinit val intake:DcMotor
+    private lateinit val conveyor:DcMotor
 
-    private lateinit var webcam: TensorWrapper
+    private lateinit val webcam: TensorWrapper
 
     fun init() {
 
