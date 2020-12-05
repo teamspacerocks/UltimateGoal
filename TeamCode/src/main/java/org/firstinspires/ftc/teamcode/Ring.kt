@@ -16,19 +16,22 @@ class Ring() {
     }
 
     fun count():Int{
+        var hsl = floatArrayOf(0.0f, 0.0f, 0.0f)
+        ColorUtils.RGBToHSL(
+                col.red(),
+                col.green(),
+                col.blue(),
+                        hsl
+        )
+        val hue = hsl[0]
+        val isYellow = ( hue in 20.0..100.0 )
+        if (!isYellow)
+            return 0
 
-        val hue = ColorUtils.RGBToHSL(
-            col.red(),
-            col.green(),
-            col.blue()
-        )[0]
-        val isYellow = ( hue in 20..100 )
-        if !isYellow return 0
-        
-        val distAboveGround = dist.getDistance(DistanceUnit.INCH)
-        when (distanceAboveGround) {
-            in 0.5 .. 1 ->  return 1
-            in 2 .. 3 -> return 3
+        when (dist.getDistance(DistanceUnit.INCH)) {
+            in 0.5 ..1.0 ->  return 1
+            in 2.0 .. 3.0 -> return 3
         }
+        return 0
     }
 }
