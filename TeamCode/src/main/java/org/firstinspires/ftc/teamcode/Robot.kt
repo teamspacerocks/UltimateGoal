@@ -17,6 +17,8 @@ class Robot(_env : LinearOpMode){
     private lateinit var intake:DcMotor
     private lateinit var conveyor:DcMotor
 
+    private lateinit var webcam: TensorWrapper
+
     fun init() {
 
         // Initialize the hardware variables. Note that the strings used here as parameters
@@ -37,6 +39,8 @@ class Robot(_env : LinearOpMode){
 
         intake = getMotor("intake")
         conveyor = getMotor("conveyor")
+
+        webcam = TensorWrapper(env)
 
         //set runmodes
         encode(*launcher.values.toTypedArray())
