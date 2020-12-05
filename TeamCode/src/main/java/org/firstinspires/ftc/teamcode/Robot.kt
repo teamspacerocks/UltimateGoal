@@ -5,8 +5,10 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.Motors.*
+
 import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.DistanceSensor
+import androidx.core.graphics.ColorUtils
 
 class Robot(_env : LinearOpMode){
 
@@ -44,10 +46,12 @@ class Robot(_env : LinearOpMode){
 
         //set runmodes
         encode(*launcher.values.toTypedArray())
-        reverse(driver.getValue(RIGHTFRONT),
-                driver.getValue(RIGHTBACK),
-                launcher.getValue(RIGHTLAUNCH),
-            intake)
+        reverse(
+            driver.getValue(RIGHTFRONT),
+            driver.getValue(RIGHTBACK),
+            launcher.getValue(RIGHTLAUNCH),
+            intake
+        )
 
     }
     
@@ -90,14 +94,14 @@ class Robot(_env : LinearOpMode){
         conveyor.power = p
     }
     
-    fun countRings():Int{
-        val rgb = listOf(
+    fun countRings(method:String):Int{
+
+        val hue = ColorUtils.RGBToHSL(
             colorSensor.red(),
             colorSensor.green(),
             colorSensor.blue()
-        )
-        val hue = 0 //Need hue conversion formula
-        val isYellow = hue
+        )[0]
+        val isYellow = ( hue in 20..100 )
         if !isYellow return 0
         
         val distanceAboveGround = distanceSensor.getDistance(DistanceUnit.INCH)
