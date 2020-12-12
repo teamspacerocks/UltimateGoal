@@ -69,12 +69,7 @@ class DriverControlled : LinearOpMode() {
             ))
 
             // shooter
-            robot.launch(
-                    if(gamepad2.y && gamepad2.x) 0.0
-                    else if(gamepad2.y) 1.0
-                    else if(gamepad2.x) -1.0
-                    else 0.0
-            )
+            robot.launch(gamepad2.left_stick_x.toDouble())
 
             // intake
             intakePower = when{
