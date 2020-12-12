@@ -12,6 +12,7 @@ class DriverControlled : LinearOpMode() {
     private val runtime = ElapsedTime()
     private lateinit var robot : Robot
     private var intakePower = 0.0 //for toggle function
+    private var shootPower = 0.8
 
     override fun runOpMode() {
 
@@ -68,11 +69,13 @@ class DriverControlled : LinearOpMode() {
                     rb,
             ))
 
+            shootPower += -1*(gamepad2.right_stick_y)*0.0001
+
             // shooter
             robot.launch(
                     if(gamepad2.y && gamepad2.x) 0.0
-                    else if(gamepad2.y) 0.9
-                    else if(gamepad2.x) -0.9
+                    else if(gamepad2.y) shootPower
+                    else if(gamepad2.x) -shootPower
                     else 0.0
             )
 
@@ -92,9 +95,8 @@ class DriverControlled : LinearOpMode() {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: $runtime")
-            telemetry.addData("left stick x", gamepad1.left_stick_x.toDouble())
-            telemetry.addData("right stick x", gamepad1.right_stick_x.toDouble())
             telemetry.addData("powers", "LF: $lf, RF: $rf, LB: $lb, RB: $rb")
+            telemetry.addData("shooter: ", shootPower)
             telemetry.update() 
         }
 

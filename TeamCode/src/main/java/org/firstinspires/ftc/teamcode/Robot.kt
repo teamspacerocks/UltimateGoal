@@ -50,7 +50,7 @@ class Robot(_env : LinearOpMode){
         webcam = TensorWrapper(env)
 
         //set runmodes
-        encode(*launcher)
+        //encode(*launcher)
         reverse(
             driver[RF.i],
             driver[RB.i],
