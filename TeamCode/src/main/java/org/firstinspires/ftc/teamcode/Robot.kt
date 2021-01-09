@@ -20,7 +20,7 @@ class Robot(_env : LinearOpMode){
 
     private val grabber: CRServo
 
-    private val webcam: TensorWrapper
+    val webcam: TensorWrapper
 
     var ring : Ring
 
@@ -99,6 +99,7 @@ class Robot(_env : LinearOpMode){
         GlobalScope.launch {
             accelerate(power, ms)
         }
+         env.sleep(ms)
         drive(0.0)
     }
 
