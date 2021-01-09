@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
-import org.firstinspires.ftc.teamcode.Motors.*
 
 @TeleOp(name = "TeleOp", group = "Tele") //@Disabled
 class DriverControlled : LinearOpMode() {
@@ -72,7 +71,7 @@ class DriverControlled : LinearOpMode() {
             shootPower += -1*(gamepad2.right_stick_y)*0.0001
 
             // shooter
-            robot.launch(
+            robot.setLaunchPower(
                     if(gamepad2.y && gamepad2.x) 0.0
                     else if(gamepad2.y) shootPower
                     else if(gamepad2.x) -shootPower

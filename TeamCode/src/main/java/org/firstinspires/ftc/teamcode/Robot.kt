@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.Motors.*
-import org.firstinspires.ftc.teamcode.Ring
+import kotlinx.coroutines.*
 
 class Robot(_env : LinearOpMode){
 
@@ -94,13 +94,24 @@ class Robot(_env : LinearOpMode){
         }
     }
 
-    fun travel(power: Double = 1.0, ms: Long){
-        drive(power)
-        env.sleep(ms)
+     fun travel(power: Double = 1.0, ms: Long){
+//        drive(power)
+        GlobalScope.launch {
+            accelerate(power, ms)
+        }
         drive(0.0)
     }
 
-    fun launch(power:Double = 0.0) {
+    private fun accelerate(power:Double, ms:Long) {
+        val start:Double = env.runtime
+        while(env.opModeIsActive() && env.runtime - start <= ms) {
+            if(power >= 0) {
+                drive(Math.min(env.runtime - start/1000, power))
+            }
+        }
+    }
+
+    fun setLaunchPower(power:Double = 0.0) {
         launcher.power = power
     }
 
