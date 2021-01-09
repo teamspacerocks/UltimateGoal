@@ -16,7 +16,7 @@ public class TensorWrapper {
     private static final String VUFORIA_KEY = KeyGet.key();
     private VuforiaLocalizer vuforia;
 
-    private TFObjectDetector tfod;
+    TFObjectDetector tfod;
 
     public TensorWrapper(LinearOpMode env) {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -29,7 +29,7 @@ public class TensorWrapper {
         int tfodMonitorViewId = env.hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", env.hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.minResultConfidence = 0.6f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
 

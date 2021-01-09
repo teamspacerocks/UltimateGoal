@@ -103,13 +103,18 @@ class Robot(_env : LinearOpMode){
         drive(0.0)
     }
 
-    private fun accelerate(power:Double, ms:Long) {
+    private fun accelerate(power:Double, ms:Long, atime:Long = Math.min(1500, ms)) {
         val start:Double = env.runtime
-        while(env.opModeIsActive() && env.runtime - start <= ms) {
-            if(power >= 0) {
-                drive(Math.min(env.runtime - start/1000, power))
-            }
+        while(env.opModeIsActive() && (env.runtime - start)*1000 <= ms) {
+            val apower: Double = Math.min((env.runtime - start)/(atime/1000.0), power)
+//            if(power >= 0) {
+            drive(apower)
+//            }
+//            env.telemetry.addData("power", apower)
+//            env.telemetry.update()
+
         }
+        off()
     }
 
     fun setLaunchPower(power:Double = 0.0) {
@@ -129,15 +134,13 @@ class Robot(_env : LinearOpMode){
     }
     
     fun drive(power: Array<Double>) {
-        for (i in power.indices) {
-            driver[i].power = power[i]
-        }
+        drive(power[0],power[1],power[2],power[3])
     }
 
     private fun drive(lf:Double, rf:Double, lb:Double, rb:Double) {
-        driver[LF.i].power = lf
+        driver[LF.i].power = lf * 0.9
         driver[RF.i].power = rf
-        driver[LB.i].power = lb
+        driver[LB.i].power = lb * 0.9
         driver[RB.i].power = rb
     }
 
@@ -145,7 +148,7 @@ class Robot(_env : LinearOpMode){
         intake.power = p
     }
 
-    private fun drive(p:Double) {
+    fun drive(p:Double) {
         drive(p, p, p, p)
     }
 

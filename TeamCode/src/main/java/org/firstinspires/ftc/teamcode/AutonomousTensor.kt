@@ -21,13 +21,14 @@ class AutonomousTensor : LinearOpMode() {
         // Wait for the game to start (driver presses PLAY)
         waitForStart()
         runtime.reset()
+        robot.webcam.tfod.activate()
 
         // run until the end of the match (driver presses STOP)
-        sleep(100)
-        var recognitions : Array<Recognition> = robot.webcam.see()
-        var label: String = "None"
+        sleep(1000)
+        val recognitions : Array<Recognition> = robot.webcam.see()
+        var label = "None"
 
-        if (recognitions.size > 0) {
+        if (recognitions.isNotEmpty()) {
             var bestrec: Recognition = recognitions[0]
             for (recognition in recognitions) {
                 if (recognition.confidence > bestrec.confidence) {
@@ -40,13 +41,13 @@ class AutonomousTensor : LinearOpMode() {
         telemetry.addData("type", label)
         telemetry.update()
 
-        robot.travel(0.8, 2000)
+        robot.travel(0.5, 2000)
         sleep(1000)
 
         when(label){
-            "Single" -> robot.travel(0.8,2000)//stuff
-            "Quad"   -> robot.travel(0.8,3000)//stuff
-            else     -> robot.travel(0.8,1000)//stuff
+            "Single" -> robot.travel(0.5,800)//stuff
+            "Quad"   -> robot.travel(0.5,2000)//stuff
+            //else     -> robot.travel(0.5,1000)//stuff
         }
 
 
