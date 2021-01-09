@@ -25,14 +25,14 @@ class Autonomous : LinearOpMode() {
         sleep(100)
         robot.travel(0.8, 2000)
 
-	var count:Int = robot.ring.count()
-	telemetry.addData("rings",count) 
+        var count:Int = robot.ring.count()
+        telemetry.addData("rings",count)
 
-	when(count){
-		0 -> //stuff
-		1 -> //stuff
-		3 -> //stuff
-	}
+        when(count){
+            0 -> robot.travel(0.8,1000)//stuff
+            1 -> robot.travel(0.8,2000)//stuff
+            3 -> robot.travel(0.8,3000)//stuff
+        }
 
 
     }

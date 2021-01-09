@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.hardware.DistanceSensor
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.Motors.*
 import org.firstinspires.ftc.teamcode.Ring
@@ -65,14 +67,14 @@ class Robot(_env : LinearOpMode){
 
     }
     
-    private fun getMotor(name:String):DcMotor {
+    private fun getMotor(name:String): DcMotor {
         return env.hardwareMap.get(DcMotor::class.java,name)
     }
 
-     private fun getColorSensor(name:String):ColorSensor {
+     private fun getColorSensor(name:String): ColorSensor {
          return env.hardwareMap.get(ColorSensor::class.java,name)
      }
-     private fun getDistanceSensor(name:String):DistanceSensor {
+     private fun getDistanceSensor(name:String): DistanceSensor {
          return env.hardwareMap.get(DistanceSensor::class.java,name)
      }
     
@@ -117,8 +119,6 @@ class Robot(_env : LinearOpMode){
         driver[LB.i].power = lb
         driver[RB.i].power = rb
     }
-
-
 
     fun intake(p: Double){
         intake.power = p
