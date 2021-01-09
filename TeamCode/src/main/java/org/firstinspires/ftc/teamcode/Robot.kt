@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.Motors.*
+import org.firstinspires.ftc.teamcode.Ring
 
 class Robot(_env : LinearOpMode){
 
