@@ -93,6 +93,20 @@ class DriverControlled : LinearOpMode() {
                 else                ->  0.0
             })
 
+            // arm
+            robot.lift(when {
+                gamepad2.dpad_up    ->  1.0
+                gamepad2.dpad_down  -> -1.0
+                else                ->  0.0
+            })
+
+            robot.grab(when {
+                gamepad2.a          -> 1.0
+                gamepad2.b &&
+                    !gamepad2.start -> -1.0
+                else                -> 0.0
+            })
+
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: $runtime")
             telemetry.addData("powers", "LF: $lf, RF: $rf, LB: $lb, RB: $rb")

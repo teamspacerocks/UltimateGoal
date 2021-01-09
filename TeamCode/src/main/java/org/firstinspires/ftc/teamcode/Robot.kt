@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.hardware.ColorSensor
-import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.hardware.DistanceSensor
+import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.Motors.*
 import org.firstinspires.ftc.teamcode.Ring
@@ -15,14 +12,17 @@ class Robot(_env : LinearOpMode){
     private val env = _env
     
     private val driver: Array<DcMotor>
-    private val launcher: Array<DcMotor>
 
+    private val launcher: DcMotor
     private val intake: DcMotor
     private val conveyor: DcMotor
+    private val arm: DcMotor
+
+    private val grabber: CRServo
 
     private val webcam: TensorWrapper
 
-    lateinit var ring : Ring
+    var ring : Ring
 
     init {
         // Initialize the hardware variables. Note that the strings used here as parameters
@@ -44,13 +44,12 @@ class Robot(_env : LinearOpMode){
             getMotor(RB.s)
         )
 
-        launcher = arrayOf(
-            getMotor(L_LAUNCH.s),
-            getMotor(R_LAUNCH.s)
-        )
-
+        launcher = getMotor(R_LAUNCH.s)
         intake = getMotor("intake")
         conveyor = getMotor("conveyor")
+        arm = getMotor("arm")
+
+        grabber = getServo("grabber")
 
         webcam = TensorWrapper(env)
 
@@ -61,8 +60,9 @@ class Robot(_env : LinearOpMode){
         reverse(
             driver[RF.i],
             driver[RB.i],
-            launcher[R_LAUNCH.i],
-            intake
+            launcher,
+            intake,
+            arm
         )
 
     }
@@ -77,6 +77,9 @@ class Robot(_env : LinearOpMode){
      private fun getDistanceSensor(name:String): DistanceSensor {
          return env.hardwareMap.get(DistanceSensor::class.java,name)
      }
+    private fun getServo(name:String): CRServo {
+        return env.hardwareMap.get(CRServo::class.java, name)
+    }
     
     private fun reverse(vararg motors:DcMotor) {
         for ( motor in motors ) {
@@ -91,20 +94,26 @@ class Robot(_env : LinearOpMode){
         }
     }
 
-    fun travel(power: Double = 1.0, seconds: Long){
+    fun travel(power: Double = 1.0, ms: Long){
         drive(power)
-        env.sleep(seconds)
+        env.sleep(ms)
         drive(0.0)
     }
 
     fun launch(power:Double = 0.0) {
-        for ( motor in launcher ) {
-            motor.power = power
-        }
+        launcher.power = power
     }
 
     fun conveyor(p: Double){
         conveyor.power = p
+    }
+
+    fun lift(p: Double) {
+        arm.power = p
+    }
+
+    fun grab(p: Double) {
+        grabber.power =p
     }
     
     fun drive(power: Array<Double>) {
