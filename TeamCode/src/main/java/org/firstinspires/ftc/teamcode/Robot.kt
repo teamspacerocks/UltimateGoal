@@ -19,6 +19,8 @@ class Robot(_env : LinearOpMode){
 
     private val webcam: TensorWrapper
 
+    lateinit var ring : Ring
+
     init {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -49,6 +51,8 @@ class Robot(_env : LinearOpMode){
 
         webcam = TensorWrapper(env)
 
+	ring = Ring(getColorSensor("sensor"),getDistanceSensor("sensor"))
+
         //set runmodes
         //encode(*launcher)
         reverse(
@@ -63,12 +67,13 @@ class Robot(_env : LinearOpMode){
     private fun getMotor(name:String):DcMotor {
         return env.hardwareMap.get(DcMotor::class.java,name)
     }
-//     private fun getColorSensor(name:String):ColorSensor {
-//         return env.hardwareMap.get(ColorSensor::class.java,name)
-//     }
-//     private fun getDistanceSensor(name:String):DistanceSensor {
-//         return env.hardwareMap.get(DistanceSensor::class.java,name)
-//     }
+
+     private fun getColorSensor(name:String):ColorSensor {
+         return env.hardwareMap.get(ColorSensor::class.java,name)
+     }
+     private fun getDistanceSensor(name:String):DistanceSensor {
+         return env.hardwareMap.get(DistanceSensor::class.java,name)
+     }
     
     private fun reverse(vararg motors:DcMotor) {
         for ( motor in motors ) {

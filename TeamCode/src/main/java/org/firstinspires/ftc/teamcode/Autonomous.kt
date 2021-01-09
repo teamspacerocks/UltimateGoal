@@ -24,6 +24,17 @@ class Autonomous : LinearOpMode() {
         // run until the end of the match (driver presses STOP)
         sleep(100)
         robot.travel(0.8, 2000)
+
+	var count:Int = robot.ring.count()
+	telemetry.addData("rings",count) 
+
+	when(count){
+		0 -> //stuff
+		1 -> //stuff
+		3 -> //stuff
+	}
+
+
     }
 
 }
