@@ -146,6 +146,13 @@ class Robot(_env: LinearOpMode){
     fun grab(p: Double) {
         grabber.power =p
     }
+
+    fun imudrive(power: Double, icorrection:Double = 40.0) {
+        var correction:Double = imu.angularOrientation.firstAngle.toDouble()/icorrection
+        var l = power-correction
+        var r = power+correction
+        drive(l, r, l, r)
+    }
     
     fun drive(power: Array<Double>) {
         drive(power[0], power[1], power[2], power[3])
