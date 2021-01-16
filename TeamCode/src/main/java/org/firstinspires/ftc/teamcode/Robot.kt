@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode
 
+import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.util.ElapsedTime
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap
 import org.firstinspires.ftc.teamcode.Motors.*
-import kotlinx.coroutines.*
 
-class Robot(_env : LinearOpMode){
+
+class Robot(_env: LinearOpMode){
 
     private val runtime = ElapsedTime()
     private val env = _env
@@ -21,6 +25,8 @@ class Robot(_env : LinearOpMode){
     private val grabber: CRServo
 
     val webcam: TensorWrapper
+    val imu: BNO055IMU
+
 
     var ring : Ring
 
@@ -38,10 +44,10 @@ class Robot(_env : LinearOpMode){
         *
         * */
         driver = arrayOf(
-            getMotor(LF.s),
-            getMotor(RF.s),
-            getMotor(LB.s),
-            getMotor(RB.s)
+                getMotor(LF.s),
+                getMotor(RF.s),
+                getMotor(LB.s),
+                getMotor(RB.s)
         )
 
         launcher = getMotor(R_LAUNCH.s)
@@ -52,42 +58,50 @@ class Robot(_env : LinearOpMode){
         grabber = getServo("grabber")
 
         webcam = TensorWrapper(env)
+        val parameters = BNO055IMU.Parameters()
+        parameters.mode                = BNO055IMU.SensorMode.IMU
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
+        parameters.loggingEnabled      = false
 
-	ring = Ring(getColorSensor("sensor"),getDistanceSensor("sensor"))
+        imu = hardwareMap.get(BNO055IMU::class.java, "imu")
+        imu.initialize(parameters)
+
+	ring = Ring(getColorSensor("sensor"), getDistanceSensor("sensor"))
 
         //set runmodes
         //encode(*launcher)
         reverse(
-            driver[RF.i],
-            driver[RB.i],
-            launcher,
-            intake,
-            arm
+                driver[RF.i],
+                driver[RB.i],
+                launcher,
+                intake,
+                arm
         )
 
     }
     
-    private fun getMotor(name:String): DcMotor {
-        return env.hardwareMap.get(DcMotor::class.java,name)
+    private fun getMotor(name: String): DcMotor {
+        return env.hardwareMap.get(DcMotor::class.java, name)
     }
 
-     private fun getColorSensor(name:String): ColorSensor {
-         return env.hardwareMap.get(ColorSensor::class.java,name)
+     private fun getColorSensor(name: String): ColorSensor {
+         return env.hardwareMap.get(ColorSensor::class.java, name)
      }
-     private fun getDistanceSensor(name:String): DistanceSensor {
-         return env.hardwareMap.get(DistanceSensor::class.java,name)
+     private fun getDistanceSensor(name: String): DistanceSensor {
+         return env.hardwareMap.get(DistanceSensor::class.java, name)
      }
-    private fun getServo(name:String): CRServo {
+    private fun getServo(name: String): CRServo {
         return env.hardwareMap.get(CRServo::class.java, name)
     }
     
-    private fun reverse(vararg motors:DcMotor) {
+    private fun reverse(vararg motors: DcMotor) {
         for ( motor in motors ) {
             motor.direction = DcMotorSimple.Direction.REVERSE
         }
     }
     
-    private fun encode(vararg motors:DcMotor) {
+    private fun encode(vararg motors: DcMotor) {
         for ( motor in motors ) {
             motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
             motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
@@ -103,10 +117,10 @@ class Robot(_env : LinearOpMode){
         drive(0.0)
     }
 
-    private fun accelerate(power:Double, ms:Long, atime:Long = Math.min(1500, ms)) {
+    private fun accelerate(power: Double, ms: Long, atime: Long = Math.min(1500, ms)) {
         val start:Double = env.runtime
         while(env.opModeIsActive() && (env.runtime - start)*1000 <= ms) {
-            val apower: Double = Math.min((env.runtime - start)/(atime/1000.0), power)
+            val apower: Double = Math.min((env.runtime - start) / (atime / 1000.0), power)
 //            if(power >= 0) {
             drive(apower)
 //            }
@@ -117,7 +131,7 @@ class Robot(_env : LinearOpMode){
         off()
     }
 
-    fun setLaunchPower(power:Double = 0.0) {
+    fun setLaunchPower(power: Double = 0.0) {
         launcher.power = power
     }
 
@@ -134,10 +148,10 @@ class Robot(_env : LinearOpMode){
     }
     
     fun drive(power: Array<Double>) {
-        drive(power[0],power[1],power[2],power[3])
+        drive(power[0], power[1], power[2], power[3])
     }
 
-    private fun drive(lf:Double, rf:Double, lb:Double, rb:Double) {
+    private fun drive(lf: Double, rf: Double, lb: Double, rb: Double) {
         driver[LF.i].power = lf * 0.9
         driver[RF.i].power = rf
         driver[LB.i].power = lb * 0.9
@@ -148,7 +162,7 @@ class Robot(_env : LinearOpMode){
         intake.power = p
     }
 
-    fun drive(p:Double) {
+    fun drive(p: Double) {
         drive(p, p, p, p)
     }
 
