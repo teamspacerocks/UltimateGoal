@@ -6,15 +6,15 @@ import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.util.ElapsedTime
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration
 import org.firstinspires.ftc.teamcode.Motors.*
 
 
-class Robot(_env: LinearOpMode){
+class Robot(_env: LinearOpMode) {
 
     private val runtime = ElapsedTime()
     private val env = _env
-    
+
     private val driver: Array<DcMotor>
 
     private val launcher: DcMotor
@@ -28,7 +28,7 @@ class Robot(_env: LinearOpMode){
     val imu: BNO055IMU
 
 
-    var ring : Ring
+    var ring: Ring
 
     init {
         // Initialize the hardware variables. Note that the strings used here as parameters
@@ -59,15 +59,15 @@ class Robot(_env: LinearOpMode){
 
         webcam = TensorWrapper(env)
         val parameters = BNO055IMU.Parameters()
-        parameters.mode                = BNO055IMU.SensorMode.IMU
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
-        parameters.loggingEnabled      = false
+        parameters.mode = BNO055IMU.SensorMode.IMU
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
+        parameters.loggingEnabled = false
 
         imu = env.hardwareMap.get(BNO055IMU::class.java, "imu")
         imu.initialize(parameters)
 
-	ring = Ring(getColorSensor("sensor"), getDistanceSensor("sensor"))
+        ring = Ring(getColorSensor("sensor"), getDistanceSensor("sensor"))
 
         //set runmodes
         //encode(*launcher)
@@ -79,51 +79,56 @@ class Robot(_env: LinearOpMode){
                 arm
         )
 
+        val gravity: Acceleration = imu.overallAcceleration
+
     }
-    
+
     private fun getMotor(name: String): DcMotor {
         return env.hardwareMap.get(DcMotor::class.java, name)
     }
 
-     private fun getColorSensor(name: String): ColorSensor {
-         return env.hardwareMap.get(ColorSensor::class.java, name)
-     }
-     private fun getDistanceSensor(name: String): DistanceSensor {
-         return env.hardwareMap.get(DistanceSensor::class.java, name)
-     }
+    private fun getColorSensor(name: String): ColorSensor {
+        return env.hardwareMap.get(ColorSensor::class.java, name)
+    }
+
+    private fun getDistanceSensor(name: String): DistanceSensor {
+        return env.hardwareMap.get(DistanceSensor::class.java, name)
+    }
+
     private fun getServo(name: String): CRServo {
         return env.hardwareMap.get(CRServo::class.java, name)
     }
-    
+
     private fun reverse(vararg motors: DcMotor) {
-        for ( motor in motors ) {
+        for (motor in motors) {
             motor.direction = DcMotorSimple.Direction.REVERSE
         }
     }
-    
+
     private fun encode(vararg motors: DcMotor) {
-        for ( motor in motors ) {
+        for (motor in motors) {
             motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
             motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
         }
     }
 
-     fun travel(power: Double = 1.0, ms: Long, useIMU:Boolean = true){
+
+    fun travel(power: Double = 1.0, ms: Long, useIMU: Boolean = true) {
         GlobalScope.launch {
-            accelerate(power, ms, useIMU=useIMU)
+            accelerate(power, ms, useIMU = useIMU)
         }
-         env.sleep(ms)
+        env.sleep(ms)
         drive(0.0)
     }
 
-    private fun accelerate(power: Double, ms: Long, atime: Long = Math.min(1500, ms), useIMU:Boolean = true) {
-        val start:Double = env.runtime
-        while(env.opModeIsActive() && (env.runtime - start)*1000 <= ms) {
+    private fun accelerate(power: Double, ms: Long, atime: Long = Math.min(1500, ms), useIMU: Boolean = true) {
+        val start: Double = env.runtime
+        val targetAngle: Float = imu.angularOrientation.firstAngle
+        while (env.opModeIsActive() && (env.runtime - start) * 1000 <= ms) {
             val apower: Double = Math.min((env.runtime - start) / (atime / 1000.0), power)
-//            if(power >= 0) {
-            if(useIMU) {
-                imudrive(apower)
-            }else{
+            if (useIMU) {
+                imudrive(apower, angle = targetAngle)
+            } else {
                 drive(apower)
             }
         }
@@ -134,7 +139,7 @@ class Robot(_env: LinearOpMode){
         launcher.power = power
     }
 
-    fun conveyor(p: Double){
+    fun conveyor(p: Double) {
         conveyor.power = p
     }
 
@@ -143,16 +148,16 @@ class Robot(_env: LinearOpMode){
     }
 
     fun grab(p: Double) {
-        grabber.power =p
+        grabber.power = p
     }
 
-    fun imudrive(power: Double, icorrection:Double = 40.0) {
-        var correction:Double = imu.angularOrientation.firstAngle.toDouble()/icorrection
-        var l = power-correction
-        var r = power+correction
+    fun imudrive(power: Double, icorrection: Double = 40.0, angle: Float = 0.0f) {
+        var correction: Double = (imu.angularOrientation.firstAngle.toDouble() / icorrection) - angle
+        var l = power - correction
+        var r = power + correction
         drive(l, r, l, r)
     }
-    
+
     fun drive(power: Array<Double>) {
         drive(power[0], power[1], power[2], power[3])
     }
@@ -164,7 +169,7 @@ class Robot(_env: LinearOpMode){
         driver[RB.i].power = rb
     }
 
-    fun intake(p: Double){
+    fun intake(p: Double) {
         intake.power = p
     }
 
