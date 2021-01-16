@@ -38,7 +38,7 @@ class IMUTest : LinearOpMode() {
 
 //            forward = -gamepad1.right_stick_y.toDouble()
 //            right = -gamepad1.right_stick_x.toDouble()
-            robot.drive(drive)
+            imudrive(drive)
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -50,10 +50,16 @@ class IMUTest : LinearOpMode() {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: $runtime")
             telemetry.addData("acceleration: ", robot.imu.linearAcceleration)
-            telemetry.addData("orientation: ", robot.imu.angularOrientation)
+            telemetry.addData("orientation: ", robot.imu.angularOrientation.firstAngle)
             telemetry.update()
         }
 
+    }
+    fun imudrive(power: Double) {
+        var correction:Double = robot.imu.angularOrientation.firstAngle.toDouble()/40.0
+        var l = power-correction
+        var r = power+correction
+        robot.drive(l, r, l, r)
     }
     fun wait(seconds: Double) {
         while (runtime.seconds() < seconds && opModeIsActive()) {

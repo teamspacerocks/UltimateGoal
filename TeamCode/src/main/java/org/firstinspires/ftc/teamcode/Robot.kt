@@ -64,7 +64,7 @@ class Robot(_env: LinearOpMode){
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
         parameters.loggingEnabled      = false
 
-        imu = hardwareMap.get(BNO055IMU::class.java, "imu")
+        imu = env.hardwareMap.get(BNO055IMU::class.java, "imu")
         imu.initialize(parameters)
 
 	ring = Ring(getColorSensor("sensor"), getDistanceSensor("sensor"))
@@ -151,7 +151,7 @@ class Robot(_env: LinearOpMode){
         drive(power[0], power[1], power[2], power[3])
     }
 
-    private fun drive(lf: Double, rf: Double, lb: Double, rb: Double) {
+    fun drive(lf: Double, rf: Double, lb: Double, rb: Double) {
         driver[LF.i].power = lf * 0.9
         driver[RF.i].power = rf
         driver[LB.i].power = lb * 0.9
