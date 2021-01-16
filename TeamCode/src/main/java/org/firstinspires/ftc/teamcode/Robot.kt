@@ -108,25 +108,24 @@ class Robot(_env: LinearOpMode){
         }
     }
 
-     fun travel(power: Double = 1.0, ms: Long){
-//        drive(power)
+     fun travel(power: Double = 1.0, ms: Long, useIMU:Boolean = true){
         GlobalScope.launch {
-            accelerate(power, ms)
+            accelerate(power, ms, useIMU=useIMU)
         }
          env.sleep(ms)
         drive(0.0)
     }
 
-    private fun accelerate(power: Double, ms: Long, atime: Long = Math.min(1500, ms)) {
+    private fun accelerate(power: Double, ms: Long, atime: Long = Math.min(1500, ms), useIMU:Boolean = true) {
         val start:Double = env.runtime
         while(env.opModeIsActive() && (env.runtime - start)*1000 <= ms) {
             val apower: Double = Math.min((env.runtime - start) / (atime / 1000.0), power)
 //            if(power >= 0) {
-            drive(apower)
-//            }
-//            env.telemetry.addData("power", apower)
-//            env.telemetry.update()
-
+            if(useIMU) {
+                imudrive(apower)
+            }else{
+                drive(apower)
+            }
         }
         off()
     }
