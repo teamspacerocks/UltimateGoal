@@ -32,11 +32,12 @@ class TensorBlueLeft : LinearOpMode() {
 
         robot.grab(-0.5)
         sleep(250)
-        robot.travel(0.5, 3000)
+        robot.travel(0.5, 2700)
         sleep(500)
 
         when(label){
             "Single" -> {
+                robot.travel(0.5,400)
                 robot.travel(0.0,800, targetAngle = -45.0f)
                 sleep(200)
                 robot.travel(0.5,400)
@@ -46,7 +47,6 @@ class TensorBlueLeft : LinearOpMode() {
             }
         }
 
-
         robot.lift(-0.5) //BRING down the wobble goal
         sleep(1000)
         robot.lift(0.0)
@@ -54,6 +54,14 @@ class TensorBlueLeft : LinearOpMode() {
         sleep(200)
         robot.grab(0.0)
 
+        when(label) {
+            "Single" -> {
+                robot.travel(-0.5,750)
+            }
+            "Quad" -> {
+                robot.travel(-0.5,2000)
+            }
+        }
 
     }
 

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration
 
 @TeleOp(name = "IMUTest", group = "Tele") //@Disabled
 class IMUTest : LinearOpMode() {
@@ -21,6 +22,7 @@ class IMUTest : LinearOpMode() {
         // Wait for the game to start (driver presses PLAY)
         waitForStart()
         runtime.reset()
+        val gravity:Acceleration = robot.imu.overallAcceleration
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -38,7 +40,7 @@ class IMUTest : LinearOpMode() {
 
 //            forward = -gamepad1.right_stick_y.toDouble()
 //            right = -gamepad1.right_stick_x.toDouble()
-            robot.imudrive(drive, angle=-45.0f)
+            robot.drive(drive)
 
 
             // Tank Mode uses one stick to control each wheel.
@@ -50,7 +52,16 @@ class IMUTest : LinearOpMode() {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: $runtime")
-            telemetry.addData("acceleration: ", robot.imu.linearAcceleration)
+            telemetry.addData("acceleration: ", robot.imu.acceleration)
+            val currentAccel:Acceleration = robot.imu.overallAcceleration
+            val calculatedAccel:Acceleration =
+                    Acceleration(gravity.unit,
+                            currentAccel.xAccel - gravity.xAccel,
+                            currentAccel.yAccel - gravity.yAccel,
+                            currentAccel.zAccel-gravity.xAccel,
+                            gravity.acquisitionTime)
+
+            telemetry.addData("overall - gravity: ", calculatedAccel)
             telemetry.addData("orientation: ", robot.imu.angularOrientation.firstAngle)
             telemetry.update()
         }
