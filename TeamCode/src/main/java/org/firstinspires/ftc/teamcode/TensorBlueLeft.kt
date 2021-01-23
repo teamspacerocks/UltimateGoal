@@ -32,13 +32,18 @@ class TensorBlueLeft : LinearOpMode() {
 
         robot.grab(-0.5)
         sleep(250)
-        robot.travel(0.5, 3000, atime=1000)
+        robot.travel(0.5, 3000)
         sleep(500)
 
         when(label){
-            "Single" -> robot.travel(0.0,800, targetAngle = -45.0f)//stuff
-            "Quad"   -> robot.travel(0.5,2000)//stuff
-            //else     -> robot.travel(0.5,1000)//stuff
+            "Single" -> {
+                robot.travel(0.0,800, targetAngle = -45.0f)
+                sleep(200)
+                robot.travel(0.5,400)
+            }
+            "Quad"   -> {
+                robot.travel(0.5,2000)
+            }
         }
 
 

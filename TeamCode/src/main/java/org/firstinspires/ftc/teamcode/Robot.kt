@@ -79,8 +79,6 @@ class Robot(_env: LinearOpMode) {
                 arm
         )
 
-        val gravity: Acceleration = imu.overallAcceleration
-
     }
 
     private fun getMotor(name: String): DcMotor {
@@ -115,7 +113,7 @@ class Robot(_env: LinearOpMode) {
 
     fun travel(power: Double = 1.0,
                ms: Long,
-               atime: Long = Math.min(1500,ms),
+               atime: Long = Math.min(1000,ms),
                useIMU: Boolean = true,
                targetAngle: Float = imu.angularOrientation.firstAngle) {
         GlobalScope.launch {
@@ -127,7 +125,7 @@ class Robot(_env: LinearOpMode) {
 
     private fun accelerate(power: Double,
                            ms: Long,
-                           atime: Long = Math.min(1500, ms),
+                           atime: Long = Math.min(1000, ms),
                            useIMU: Boolean = true,
                            targetAngle: Float = imu.angularOrientation.firstAngle) {
         val start: Double = env.runtime
@@ -161,9 +159,9 @@ class Robot(_env: LinearOpMode) {
     }
 
     fun imudrive(power: Double, icorrection: Double = 40.0, angle: Float = 0.0f) {
-        var correction: Double = (imu.angularOrientation.firstAngle.toDouble()- angle)/ icorrection
-        var l = power - correction
-        var r = power + correction
+        val correction: Double = (imu.angularOrientation.firstAngle.toDouble()- angle)/ icorrection
+        val l = power - correction
+        val r = power + correction
         drive(l, r, l, r)
     }
 
