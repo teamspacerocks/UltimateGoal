@@ -38,7 +38,8 @@ class IMUTest : LinearOpMode() {
 
 //            forward = -gamepad1.right_stick_y.toDouble()
 //            right = -gamepad1.right_stick_x.toDouble()
-            robot.imudrive(drive)
+            robot.imudrive(drive, angle=-45.0f)
+
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.

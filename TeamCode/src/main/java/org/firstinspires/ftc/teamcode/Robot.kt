@@ -113,21 +113,30 @@ class Robot(_env: LinearOpMode) {
     }
 
 
-    fun travel(power: Double = 1.0, ms: Long, useIMU: Boolean = true) {
+    fun travel(power: Double = 1.0,
+               ms: Long,
+               atime: Long = Math.min(1500,ms),
+               useIMU: Boolean = true,
+               targetAngle: Float = imu.angularOrientation.firstAngle) {
         GlobalScope.launch {
-            accelerate(power, ms, useIMU = useIMU)
+            accelerate(power, ms, atime, useIMU, targetAngle)
         }
         env.sleep(ms)
         drive(0.0)
     }
 
-    private fun accelerate(power: Double, ms: Long, atime: Long = Math.min(1500, ms), useIMU: Boolean = true) {
+    private fun accelerate(power: Double,
+                           ms: Long,
+                           atime: Long = Math.min(1500, ms),
+                           useIMU: Boolean = true,
+                           targetAngle: Float = imu.angularOrientation.firstAngle) {
         val start: Double = env.runtime
-        val targetAngle: Float = imu.angularOrientation.firstAngle
         while (env.opModeIsActive() && (env.runtime - start) * 1000 <= ms) {
             val apower: Double = Math.min((env.runtime - start) / (atime / 1000.0), power)
             if (useIMU) {
                 imudrive(apower, angle = targetAngle)
+                env.telemetry.addData("angle", imu.angularOrientation.firstAngle)
+                env.telemetry.update()
             } else {
                 drive(apower)
             }
@@ -152,7 +161,7 @@ class Robot(_env: LinearOpMode) {
     }
 
     fun imudrive(power: Double, icorrection: Double = 40.0, angle: Float = 0.0f) {
-        var correction: Double = (imu.angularOrientation.firstAngle.toDouble() / icorrection) - angle
+        var correction: Double = (imu.angularOrientation.firstAngle.toDouble()- angle)/ icorrection
         var l = power - correction
         var r = power + correction
         drive(l, r, l, r)
