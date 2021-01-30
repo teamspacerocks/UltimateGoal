@@ -32,18 +32,19 @@ class TensorBlueLeft : LinearOpMode() {
 
         robot.grab(-0.5)
         sleep(250)
-        robot.travel(0.5, 2700)
+        robot.travel(0.5, 2700, targetAngle = 0.0f)
         sleep(500)
 
         when(label){
             "Single" -> {
-                robot.travel(0.5,400)
+                robot.travel(0.5,750, targetAngle = 0.0f)
+                sleep(200)
                 robot.travel(0.0,800, targetAngle = -45.0f)
                 sleep(200)
                 robot.travel(0.5,400)
             }
             "Quad"   -> {
-                robot.travel(0.5,2000)
+                robot.travel(0.5,2000, targetAngle = 0.0f)
             }
         }
 
@@ -62,7 +63,6 @@ class TensorBlueLeft : LinearOpMode() {
                 robot.travel(-0.5,2000)
             }
         }
-
     }
 
     fun getBestRecognition():String {
