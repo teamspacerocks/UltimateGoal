@@ -43,8 +43,8 @@ class DriverControlled : LinearOpMode() {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            val drive = -gamepad1.left_stick_y.toDouble()
-            val turn = -gamepad1.left_stick_x.toDouble()
+            val drive = -(gamepad1.left_stick_y.toDouble() + gamepad2.left_stick_y.toDouble())
+            val turn = -(gamepad1.left_stick_x.toDouble() + gamepad2.left_stick_x.toDouble())
             leftPower = Range.clip(drive + turn, -1.0, 1.0)
             rightPower = Range.clip(drive - turn, -1.0, 1.0)
 
@@ -72,9 +72,9 @@ class DriverControlled : LinearOpMode() {
 
             // shooter
             robot.setLaunchPower(
-                    if(gamepad2.y && gamepad2.x) 0.0
-                    else if(gamepad2.y) shootPower
-                    else if(gamepad2.x) -shootPower
+                    if(gamepad1.y && gamepad1.x) 0.0
+                    else if(gamepad1.y) shootPower
+                    else if(gamepad1.x) -shootPower
                     else 0.0
             )
 
