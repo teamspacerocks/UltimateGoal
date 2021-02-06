@@ -25,7 +25,7 @@ class TensorRedLeft : LinearOpMode() {
         //turn camera towards stack
         robot.travel(0.5, 250)
         sleep(500)
-        robot.travel(0.0, 500, targetAngle=15.0f)
+        robot.travel(0.0, 500, targetAngle=30.0f)
 
         robot.webcam.tfod.activate()
         sleep(1000)
@@ -42,7 +42,10 @@ class TensorRedLeft : LinearOpMode() {
                 robot.travel(0.0, 750, targetAngle = -45.0f)
             }
             "Single" -> {
-                robot.travel(0.5,500, targetAngle = 0.0f)
+                robot.travel(0.5,750, targetAngle = 0.0f)
+                sleep(500)
+                robot.travel(0.0, 750, targetAngle = 30.0f)
+
             }
             "Quad"   -> {
                 robot.travel(0.5,1500, targetAngle = 0.0f)
@@ -64,7 +67,7 @@ class TensorRedLeft : LinearOpMode() {
                 robot.travel(-0.5,750, targetAngle=0.0f)
             }
             "Quad" -> {
-                robot.travel(-0.5,2000, targetAngle=0.0f)
+                robot.travel(-0.5,1700, targetAngle=0.0f)
             }
         }
     }

@@ -133,8 +133,6 @@ class Robot(_env: LinearOpMode) {
             val apower: Double = Math.min((env.runtime - start) / (atime / 1000.0), power)
             if (useIMU) {
                 imudrive(apower, angle = targetAngle)
-                env.telemetry.addData("angle", imu.angularOrientation.firstAngle)
-                env.telemetry.update()
             } else {
                 drive(apower)
             }
