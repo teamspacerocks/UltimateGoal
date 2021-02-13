@@ -20,7 +20,7 @@ class Robot(_env: LinearOpMode) {
     private val launcher: DcMotor
     private val intake: DcMotor
     private val conveyor: DcMotor
-    private val arm: DcMotor
+    val arm: DcMotor
 
     private val grabber: CRServo
 
@@ -103,10 +103,12 @@ class Robot(_env: LinearOpMode) {
         }
     }
 
-    private fun encode(vararg motors: DcMotor) {
+    fun encode(vararg motors: DcMotor) {
         for (motor in motors) {
             motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-            motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
+            motor.targetPosition = 0
+            motor.mode = DcMotor.RunMode.RUN_TO_POSITION
+            motor.power = 1.0
         }
     }
 
@@ -142,6 +144,7 @@ class Robot(_env: LinearOpMode) {
 
     fun setLaunchPower(power: Double = 0.0) {
         launcher.power = power
+
     }
 
     fun conveyor(p: Double) {
@@ -150,6 +153,11 @@ class Robot(_env: LinearOpMode) {
 
     fun lift(p: Double) {
         arm.power = p
+    }
+
+    fun liftPosition(p: Int) {
+        arm.targetPosition = p
+
     }
 
     fun grab(p: Double) {

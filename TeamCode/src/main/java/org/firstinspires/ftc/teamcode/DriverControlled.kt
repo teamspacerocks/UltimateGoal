@@ -11,11 +11,14 @@ class DriverControlled : LinearOpMode() {
     private val runtime = ElapsedTime()
     private lateinit var robot : Robot
     private var intakePower = 0.0 //for toggle function
-    private var shootPower = 0.8
+    private var shootPower = 0.85
+    private var ppos:Int = 0
 
     override fun runOpMode() {
 
         robot = Robot(this)
+        robot.encode(robot.arm)
+
 
         telemetry.addData("Status:", "Initialized")
         telemetry.update()
@@ -23,6 +26,7 @@ class DriverControlled : LinearOpMode() {
         // Wait for the game to start (driver presses PLAY)
         waitForStart()
         runtime.reset()
+
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -68,7 +72,8 @@ class DriverControlled : LinearOpMode() {
                     rb,
             ))
 
-            shootPower += -1*(gamepad2.right_stick_y)*0.0001
+            //make this time based or just have a better system
+            shootPower += -1*(gamepad2.right_stick_y)*0.001
 
             // shooter
             robot.setLaunchPower(
@@ -93,11 +98,21 @@ class DriverControlled : LinearOpMode() {
             })
 
             // arm
+            /*
             robot.lift(when {
                 gamepad2.dpad_up    ->  1.0
                 gamepad2.dpad_down  -> -1.0
                 else                ->  0.0
             })
+
+             */
+
+            when {
+                gamepad2.dpad_up    ->  robot.liftPosition(0)
+                gamepad2.dpad_down  ->  robot.liftPosition(-390)
+            }
+            robot.arm.power = Math.abs(robot.arm.currentPosition - robot.arm.targetPosition)/370.0
+
 
             robot.grab(when {
                 gamepad2.a          -> 1.0
@@ -110,6 +125,8 @@ class DriverControlled : LinearOpMode() {
             telemetry.addData("Status", "Run Time: $runtime")
             telemetry.addData("powers", "LF: $lf, RF: $rf, LB: $lb, RB: $rb")
             telemetry.addData("shooter: ", shootPower)
+            telemetry.addData("targetposition: ", robot.arm.targetPosition)
+            telemetry.addData("currentposition", robot.arm.currentPosition)
             telemetry.update() 
         }
 
