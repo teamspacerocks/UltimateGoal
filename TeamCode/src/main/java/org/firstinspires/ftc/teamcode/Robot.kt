@@ -148,12 +148,20 @@ class Robot(_env: LinearOpMode) {
     }
 
     fun goTo(power: Double,
-             position: Int) {
-        GlobalScope.launch {
-            accelerateTo(power, position)
+             position: Int,
+             targetAngle:Float = imu.angularOrientation.firstAngle,
+             busy:Boolean = false) {
+        if(!busy) {
+            accelerateTo(power, position, targetAngle)
+        } else {
+            GlobalScope.launch {
+                accelerateTo(power, position, targetAngle)
+            }
         }
     }
-    private fun accelerateTo(power:Double, position:Int) {
+    private fun accelerateTo(power:Double,
+                             position:Int,
+                             targetAngle:Float = imu.angularOrientation.firstAngle) {
         //there must be a better way of doing this
         val oldPosition = intArrayOf(driver[0].currentPosition, driver[1].currentPosition, driver[2].currentPosition, driver[3].currentPosition)
         for(i in 0..3) {
@@ -165,8 +173,9 @@ class Robot(_env: LinearOpMode) {
                     (abs(driver[0].currentPosition - driver[0].targetPosition)/200.0) //deceleration
                      .coerceAtMost(env.runtime-start) //acceleration
                      .coerceAtMost(power) //cap at power
-            imudrive(calculatedPower)
+            imudrive(calculatedPower, angle=targetAngle)
         }
+
         drive(0.0)
     }
 
