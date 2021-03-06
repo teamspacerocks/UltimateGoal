@@ -158,6 +158,7 @@ class Robot(_env: LinearOpMode) {
                 accelerateTo(power, position, targetAngle)
             }
         }
+        //TODO: add a+bx mintime thing so that it doesn't run for too long
     }
     private fun accelerateTo(power:Double,
                              position:Int,
@@ -168,15 +169,18 @@ class Robot(_env: LinearOpMode) {
             driver[i].targetPosition = oldPosition[i] + position
         }
         val start = env.runtime
-        while(abs(driver[0].targetPosition - driver[0].currentPosition) > 10 && env.opModeIsActive()) {
-            val calculatedPower:Double = abs(power)
-                     .coerceAtMost(abs(driver[0].currentPosition - driver[0].targetPosition)/200.0) //deceleration
-                     .coerceAtMost(env.runtime-start) //acceleration
-            if(driver[0].currentPosition - driver[0].targetPosition > 0) {
+        //TODO: use average wheel positions other than just the first one
+        while(abs(driver[0].targetPosition - driver[0].currentPosition) > 9 && env.opModeIsActive()) {
+            val calculatedPower: Double = abs(power)
+                    .coerceAtMost(abs(driver[0].currentPosition - driver[0].targetPosition) / 150.0) //deceleration
+                    .coerceAtMost(env.runtime - start) //acceleration
+            if (driver[0].currentPosition - driver[0].targetPosition < 0) {
                 imudrive(calculatedPower, angle = targetAngle)
             } else {
                 imudrive(-calculatedPower, angle = targetAngle)
             }
+            env.telemetry.addData("opmode", env.opModeIsActive())
+            env.telemetry.update()
         }
 
         drive(0.0)

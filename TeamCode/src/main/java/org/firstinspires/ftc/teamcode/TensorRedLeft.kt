@@ -34,7 +34,7 @@ class TensorRedLeft : LinearOpMode() {
 
         robot.travel(0.0, 500, targetAngle=0.0f)
         sleep(500)
-        robot.goTo(0.5, 2500, targetAngle = 0.0f)
+        robot.goTo(0.5, 2000, targetAngle = 0.0f)
         sleep(500)
 
         when(label){
@@ -67,12 +67,12 @@ class TensorRedLeft : LinearOpMode() {
             "Single" -> {
                 robot.travel(0.0, 500, targetAngle = 0.0f)
                 sleep(500)
-                robot.goTo(-0.5,900, targetAngle=0.0f)
+                robot.goTo(0.5,-750, targetAngle=0.0f)
             }
             "Quad" -> {
                 robot.travel(0.0, 750, targetAngle=0.0f)
                 sleep(500)
-                robot.goTo(-0.5,1700, targetAngle=0.0f)
+                robot.goTo(0.5,-1700, targetAngle=0.0f)
             }
         }
         sleep(500)
