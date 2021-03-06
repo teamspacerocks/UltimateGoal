@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration
 
-@TeleOp(name = "IMUTest", group = "Tele") //@Disabled
+@TeleOp(name = "IMUTest", group = "Tele")
+@Disabled
 class IMUTest : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
@@ -54,7 +56,7 @@ class IMUTest : LinearOpMode() {
             telemetry.addData("Status", "Run Time: $runtime")
             telemetry.addData("acceleration: ", robot.imu.acceleration)
             val currentAccel:Acceleration = robot.imu.overallAcceleration
-            val calculatedAccel:Acceleration =
+            val calculatedAccel =
                     Acceleration(gravity.unit,
                             currentAccel.xAccel - gravity.xAccel,
                             currentAccel.yAccel - gravity.yAccel,

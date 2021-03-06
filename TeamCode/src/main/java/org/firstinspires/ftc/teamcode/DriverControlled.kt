@@ -17,7 +17,6 @@ class DriverControlled : LinearOpMode() {
     override fun runOpMode() {
 
         robot = Robot(this)
-        robot.encode(robot.arm)
 
 
         telemetry.addData("Status:", "Initialized")
@@ -98,20 +97,20 @@ class DriverControlled : LinearOpMode() {
             })
 
             // arm
-            /*
+
             robot.lift(when {
                 gamepad2.dpad_up    ->  1.0
                 gamepad2.dpad_down  -> -1.0
                 else                ->  0.0
             })
 
-             */
 
-            when {
-                gamepad2.dpad_up    ->  robot.liftPosition(0)
-                gamepad2.dpad_down  ->  robot.liftPosition(-390)
-            }
-            robot.arm.power = Math.abs(robot.arm.currentPosition - robot.arm.targetPosition)/370.0
+//
+//            when {
+//                gamepad2.dpad_up    ->  robot.liftPosition(0)
+//                gamepad2.dpad_down  ->  robot.liftPosition(-390)
+//            }
+//            robot.arm.power = Math.abs(robot.arm.currentPosition - robot.arm.targetPosition)/370.0
 
 
             robot.grab(when {

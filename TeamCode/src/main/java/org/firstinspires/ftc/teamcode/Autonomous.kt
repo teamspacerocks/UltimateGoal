@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
 
-@Autonomous(name = "Autonomous", group = "Auto") //@Disabled
+@Autonomous(name = "Autonomous", group = "Auto")
+@Disabled
 class Autonomous : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
@@ -25,7 +27,7 @@ class Autonomous : LinearOpMode() {
         sleep(100)
         robot.travel(0.8, 2000)
 
-        var count:Int = robot.ring.count()
+        val count:Int = robot.ring.count()
         telemetry.addData("rings",count)
 
         when(count){

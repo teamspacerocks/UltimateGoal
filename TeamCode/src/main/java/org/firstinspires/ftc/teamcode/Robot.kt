@@ -8,6 +8,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration
 import org.firstinspires.ftc.teamcode.Motors.*
+import kotlin.math.abs
 
 
 class Robot(_env: LinearOpMode) {
@@ -108,8 +109,12 @@ class Robot(_env: LinearOpMode) {
             motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
             motor.targetPosition = 0
             motor.mode = DcMotor.RunMode.RUN_TO_POSITION
-            motor.power = 1.0
+            motor.power = 0.0
         }
+    }
+
+    fun encodeDrive() {
+        encode(*driver)
     }
 
 
@@ -140,6 +145,29 @@ class Robot(_env: LinearOpMode) {
             }
         }
         off()
+    }
+
+    fun goTo(power: Double,
+             position: Int) {
+        GlobalScope.launch {
+            accelerateTo(power, position)
+        }
+    }
+    private fun accelerateTo(power:Double, position:Int) {
+        //there must be a better way of doing this
+        val oldPosition = intArrayOf(driver[0].currentPosition, driver[1].currentPosition, driver[2].currentPosition, driver[3].currentPosition)
+        for(i in 0..3) {
+            driver[i].targetPosition = oldPosition[i] + position
+        }
+        val start = env.runtime
+        while(abs(driver[0].targetPosition - driver[0].currentPosition) > 10 && env.opModeIsActive()) {
+            val calculatedPower:Double =
+                    (abs(driver[0].currentPosition - driver[0].targetPosition)/200.0) //deceleration
+                     .coerceAtMost(env.runtime-start) //acceleration
+                     .coerceAtMost(power) //cap at power
+            imudrive(calculatedPower)
+        }
+        drive(0.0)
     }
 
     fun setLaunchPower(power: Double = 0.0) {

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition
 
 @Autonomous(name = "TensorBlueRight", group = "Auto")
+@Disabled
 class TensorBlueRight : LinearOpMode() {
     private val runtime = ElapsedTime()
     private lateinit var robot : Robot
