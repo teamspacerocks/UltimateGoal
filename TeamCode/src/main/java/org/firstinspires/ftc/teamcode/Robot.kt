@@ -169,11 +169,14 @@ class Robot(_env: LinearOpMode) {
         }
         val start = env.runtime
         while(abs(driver[0].targetPosition - driver[0].currentPosition) > 10 && env.opModeIsActive()) {
-            val calculatedPower:Double =
-                    (abs(driver[0].currentPosition - driver[0].targetPosition)/200.0) //deceleration
+            val calculatedPower:Double = abs(power)
+                     .coerceAtMost(abs(driver[0].currentPosition - driver[0].targetPosition)/200.0) //deceleration
                      .coerceAtMost(env.runtime-start) //acceleration
-                     .coerceAtMost(power) //cap at power
-            imudrive(calculatedPower, angle=targetAngle)
+            if(driver[0].currentPosition - driver[0].targetPosition > 0) {
+                imudrive(calculatedPower, angle = targetAngle)
+            } else {
+                imudrive(-calculatedPower, angle = targetAngle)
+            }
         }
 
         drive(0.0)
