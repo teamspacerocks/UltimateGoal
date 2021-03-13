@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode
+package org.firstinspires.ftc.teamcode.wrappers
 
 import androidx.core.graphics.ColorUtils
 import com.qualcomm.robotcore.hardware.ColorSensor
