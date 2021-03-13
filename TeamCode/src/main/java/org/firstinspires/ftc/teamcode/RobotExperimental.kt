@@ -11,25 +11,24 @@ import org.firstinspires.ftc.teamcode.Motors.*
 import kotlin.math.abs
 
 
-open class Robot(_env: LinearOpMode) {
+class RobotExperimental(_env: LinearOpMode): Robot(_env) {
 
+    /*
     private val runtime = ElapsedTime()
-    protected val env = _env
+    private val env = _env
 
-    protected val driver: Array<DcMotor>
+    private val driver: Array<DcMotor>
 
     private val launcher: DcMotor
     private val intake: DcMotor
     private val conveyor: DcMotor
-    val arm: DcMotor
+    private val arm: DcMotor
 
     private val grabber: CRServo
 
     val webcam: TensorWrapper
     val imu: BNO055IMU
 
-
-    var ring: Ring
 
     init {
         // Initialize the hardware variables. Note that the strings used here as parameters
@@ -44,6 +43,7 @@ open class Robot(_env: LinearOpMode) {
         * each Motor.
         *
         * */
+
         driver = arrayOf(
                 getMotor(LF.s),
                 getMotor(RF.s),
@@ -51,7 +51,7 @@ open class Robot(_env: LinearOpMode) {
                 getMotor(RB.s)
         )
 
-        launcher = getMotor(R_LAUNCH.s)
+        launcher = getMotor("launch2")
         intake = getMotor("intake")
         conveyor = getMotor("conveyor")
         arm = getMotor("arm")
@@ -59,16 +59,14 @@ open class Robot(_env: LinearOpMode) {
         grabber = getServo("grabber")
 
         webcam = TensorWrapper(env)
+
         val parameters = BNO055IMU.Parameters()
         parameters.mode = BNO055IMU.SensorMode.IMU
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
         parameters.loggingEnabled = false
 
         imu = env.hardwareMap.get(BNO055IMU::class.java, "imu")
         imu.initialize(parameters)
-
-        ring = Ring(getColorSensor("sensor"), getDistanceSensor("sensor"))
 
         //set runmodes
         //encode(*launcher)
@@ -147,10 +145,12 @@ open class Robot(_env: LinearOpMode) {
         off()
     }
 
-    open fun goTo(power: Double,
-             position: Int,
-             targetAngle:Float = imu.angularOrientation.firstAngle,
-             busy:Boolean = false) {
+     */
+
+    override fun goTo(power: Double,
+                      position: Int,
+                      targetAngle:Float,
+                      busy:Boolean) {
         if(!busy) {
             accelerateTo(power, position, targetAngle)
         } else {
@@ -158,9 +158,8 @@ open class Robot(_env: LinearOpMode) {
                 accelerateTo(power, position, targetAngle)
             }
         }
-        //TODO: add a+bx mintime thing so that it doesn't run for too long
     }
-    private fun accelerateTo(power:Double,
+     private fun accelerateTo(power:Double,
                              position:Int,
                              targetAngle:Float = imu.angularOrientation.firstAngle) {
         //there must be a better way of doing this
@@ -169,23 +168,42 @@ open class Robot(_env: LinearOpMode) {
             driver[i].targetPosition = oldPosition[i] + position
         }
         val start = env.runtime
-        //TODO: use average wheel positions other than just the first one
-        while(abs(driver[0].targetPosition - driver[0].currentPosition) > 9 && env.opModeIsActive()) {
+//        var sum = 0
+//        for(motor in driver) {
+//            sum += motor.targetPosition
+//        }
+
+        var stage = 0
+        var adjustment = 0.0
+        while ((stage == 0 || env.runtime - 0.5 < adjustment) && env.opModeIsActive()) {
+            if (stage == 0 && abs(driver[0].currentPosition-driver[0].targetPosition) <= 9) {
+                stage = 1
+                adjustment = env.runtime
+            }
             val calculatedPower: Double = abs(power)
                     .coerceAtMost(abs(driver[0].currentPosition - driver[0].targetPosition) / 150.0) //deceleration
                     .coerceAtMost(env.runtime - start) //acceleration
-            if (driver[0].currentPosition - driver[0].targetPosition < 0) {
+            if (driver[0].targetPosition - driver[0].currentPosition > 0) {
                 imudrive(calculatedPower, angle = targetAngle)
             } else {
                 imudrive(-calculatedPower, angle = targetAngle)
             }
             env.telemetry.addData("opmode", env.opModeIsActive())
+                    .addData("runtime, adjustment","${env.runtime}, $adjustment")
             env.telemetry.update()
         }
 
         drive(0.0)
     }
 
+    private fun getSum():Int {
+        var sum = 0
+        for(motor in driver) {
+            sum += motor.currentPosition
+        }
+        return sum
+    }
+    /*
     fun setLaunchPower(power: Double = 0.0) {
         launcher.power = power
 
@@ -238,5 +256,7 @@ open class Robot(_env: LinearOpMode) {
         drive(0.0)
         intake(0.0)
     }
+
+     */
 
 }

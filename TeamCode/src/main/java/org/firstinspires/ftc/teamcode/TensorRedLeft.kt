@@ -11,7 +11,7 @@ class TensorRedLeft : LinearOpMode() {
 
     override fun runOpMode() {
 
-        robot = Robot(this)
+        robot = RobotExperimental(this)
 
         telemetry.addData("Status:", "Initialized")
         telemetry.update()
@@ -39,6 +39,7 @@ class TensorRedLeft : LinearOpMode() {
 
         when(label){
             "None"   -> {
+                robot.goTo(0.5, 100)
                 robot.travel(0.0, 750, targetAngle = -45.0f)
             }
             "Single" -> {
@@ -49,7 +50,7 @@ class TensorRedLeft : LinearOpMode() {
                 robot.goTo(0.5,250, targetAngle = 30.0f)
             }
             "Quad"   -> {
-                robot.goTo(0.5,1500, targetAngle = 0.0f)
+                robot.goTo(0.5,1750, targetAngle = 0.0f)
                 sleep(500)
                 robot.travel(0.0, 750, targetAngle = -45.0f)
             }
@@ -67,7 +68,7 @@ class TensorRedLeft : LinearOpMode() {
             "Single" -> {
                 robot.travel(0.0, 500, targetAngle = 0.0f)
                 sleep(500)
-                robot.goTo(0.5,-750, targetAngle=0.0f)
+                robot.goTo(0.5,-600, targetAngle=0.0f)
             }
             "Quad" -> {
                 robot.travel(0.0, 750, targetAngle=0.0f)
@@ -77,7 +78,7 @@ class TensorRedLeft : LinearOpMode() {
         }
         sleep(500)
         robot.lift(0.5)
-        sleep(2000)
+        sleep(1250)
         robot.lift(0.0)
     }
 

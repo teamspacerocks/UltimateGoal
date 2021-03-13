@@ -100,7 +100,7 @@ class DriverControlled : LinearOpMode() {
 
             robot.lift(when {
                 gamepad2.dpad_up    ->  1.0
-                gamepad2.dpad_down  -> -1.0
+                gamepad2.dpad_down  -> -0.5
                 else                ->  0.0
             })
 
