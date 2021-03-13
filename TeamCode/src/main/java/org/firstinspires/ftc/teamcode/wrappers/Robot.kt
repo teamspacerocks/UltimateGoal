@@ -159,6 +159,21 @@ open class Robot(_env: LinearOpMode) {
         }
         //TODO: add a+bx mintime thing so that it doesn't run for too long
     }
+
+    private fun driverTargetAvg(): Int {
+        return (driver[0].targetPosition +
+                driver[1].targetPosition +
+                driver[2].targetPosition +
+                driver[3].targetPosition)/4
+    }
+
+    private fun driverCurrAvg(): Int {
+        return (driver[0].currentPosition +
+                driver[1].currentPosition +
+                driver[2].currentPosition +
+                driver[3].currentPosition)/4
+    }
+
     private fun accelerateTo(power:Double,
                              position:Int,
                              targetAngle:Float = imu.angularOrientation.firstAngle) {
@@ -168,12 +183,11 @@ open class Robot(_env: LinearOpMode) {
             driver[i].targetPosition = oldPosition[i] + position
         }
         val start = env.runtime
-        //TODO: use average wheel positions other than just the first one
-        while(abs(driver[0].targetPosition - driver[0].currentPosition) > 9 && env.opModeIsActive()) {
+        while(abs(driverTargetAvg() - driverCurrAvg()) > 9 && env.opModeIsActive()) {
             val calculatedPower: Double = abs(power)
-                    .coerceAtMost(abs(driver[0].currentPosition - driver[0].targetPosition) / 150.0) //deceleration
+                    .coerceAtMost(abs(driverCurrAvg() - driverTargetAvg()) / 150.0) //deceleration
                     .coerceAtMost(env.runtime - start) //acceleration
-            if (driver[0].currentPosition - driver[0].targetPosition < 0) {
+            if (driverCurrAvg() - driverTargetAvg() < 0) {
                 imudrive(calculatedPower, angle = targetAngle)
             } else {
                 imudrive(-calculatedPower, angle = targetAngle)
