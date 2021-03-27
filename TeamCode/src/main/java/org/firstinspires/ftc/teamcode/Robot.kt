@@ -201,7 +201,13 @@ open class Robot(_env: LinearOpMode) {
 
     fun liftPosition(p: Int) {
         arm.targetPosition = p
+    }
 
+    fun getArmMovement(): Double {
+        var result = 0.0
+//        result = abs(halfSecondAgo - arm.currentPosition)
+        result *= arm.power
+        return abs(result)
     }
 
     fun grab(p: Double) {

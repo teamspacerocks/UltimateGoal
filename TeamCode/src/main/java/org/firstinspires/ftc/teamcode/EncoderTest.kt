@@ -23,11 +23,32 @@ class EncoderTest : LinearOpMode() {
         waitForStart()
         runtime.reset()
 
-        //do stuff
-        robot.encodeDrive()
+        robot.encode(robot.arm)
+        while(opModeIsActive()) {
+            if(gamepad1.left_trigger > 0) {
+                robot.encode(robot.arm)
+            }
+            when {
+                gamepad2.dpad_down -> {
+                    robot.arm.power = 0.5
+                    robot.arm.targetPosition = -400
+                }
+                gamepad2.dpad_up -> {
+//                    if(robot.getArmResistance() < 100.0) {
+                        robot.arm.power = 1.0
+                        robot.arm.targetPosition = robot.arm.currentPosition + 100
+//                    } else {
+//                        robot.arm.power = 0.0
+//                        robot.encode(robot.arm)
+//                    }
+                }
+                else -> {
+                    robot.arm.power = 0.0
+                }
+            }
+            telemetry.addData("arm pos", robot.arm.currentPosition)
+            telemetry.update()
+        }
 
-//        robot.goTo(0.5, 1000) //24 inches, 1 tile
-        robot.goTo(0.5, 3000)
-        sleep(30000)
     }
 }

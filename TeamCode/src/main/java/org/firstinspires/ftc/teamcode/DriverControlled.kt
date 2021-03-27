@@ -98,11 +98,22 @@ class DriverControlled : LinearOpMode() {
 
             // arm
 
-            robot.lift(when {
-                gamepad2.dpad_up    ->  1.0
-                gamepad2.dpad_down  -> -0.5
-                else                ->  0.0
-            })
+            if(gamepad2.left_trigger > 0) {
+                robot.encode(robot.arm)
+            }
+            when {
+                gamepad2.dpad_down -> {
+                    robot.arm.power = -0.5
+                    robot.arm.targetPosition = -400
+                }
+                gamepad2.dpad_up -> {
+                    robot.arm.power = 1.0
+                    robot.arm.targetPosition = robot.arm.currentPosition + 100
+                }
+                else -> {
+                    robot.arm.power = 0.0
+                }
+            }
 
 
 //
