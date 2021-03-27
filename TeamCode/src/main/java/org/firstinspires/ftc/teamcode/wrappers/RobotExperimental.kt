@@ -4,13 +4,32 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.DcMotor
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.concurrent.timer
 import kotlin.math.abs
 
 
 class RobotExperimental(_env: LinearOpMode): Robot(_env) {
 
+    private var armDelta : Int
+    private var armLastLocation : Int
+    private var deltaTimer : Timer
+
     init{
         launcher.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        armDelta = 0
+        armLastLocation = arm.currentPosition
+        deltaTimer = Timer("deltaUpdate", true)
+        deltaTimer.scheduleAtFixedRate(DeltaUpdate(this), 0, 500)
+    }
+
+    class DeltaUpdate(_env : RobotExperimental) : TimerTask() {
+        private val env = _env
+        override fun run() {
+            env.armDelta = env.arm.currentPosition - env.armLastLocation
+            env.armLastLocation = env.arm.currentPosition
+        }
+
     }
 
     override fun goTo(power: Double,
@@ -65,5 +84,7 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
         }
         return sum
     }
-    
+
+
+
 }
