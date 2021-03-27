@@ -1,12 +1,17 @@
 package org.firstinspires.ftc.teamcode.wrappers
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.DcMotor
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 
 class RobotExperimental(_env: LinearOpMode): Robot(_env) {
+
+    init{
+        launcher.mode = DcMotor.RunMode.RUN_USING_ENCODER
+    }
 
     override fun goTo(power: Double,
                       position: Int,

@@ -17,7 +17,7 @@ open class Robot(_env: LinearOpMode) {
 
     protected val driver: Array<DcMotor>
 
-    private val launcher: DcMotor
+    protected val launcher: DcMotor
     private val intake: DcMotor
     private val conveyor: DcMotor
     val arm: DcMotor
