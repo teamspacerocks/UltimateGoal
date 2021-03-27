@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.wrappers.Robot
 
-@TeleOp(name = "EncoderTest", group = "Tele") //@Disabled
-class EncoderTest : LinearOpMode() {
+@TeleOp(name = "ArmEncoderTest", group = "Tele") //@Disabled
+class ArmEncoderTest : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
     private lateinit var robot : Robot

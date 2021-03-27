@@ -47,8 +47,9 @@ class DriverControlled : LinearOpMode() {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            val drive = -(gamepad1.left_stick_y.toDouble() + gamepad2.left_stick_y.toDouble())
-            val turn = -(gamepad1.left_stick_x.toDouble() + gamepad2.left_stick_x.toDouble())
+            val factor = if (gamepad1.right_bumper||gamepad2.right_bumper) 0.5 else 1.0
+            val drive = -(gamepad1.left_stick_y.toDouble() + gamepad2.left_stick_y.toDouble()) * factor * factor
+            val turn = -(gamepad1.left_stick_x.toDouble() + gamepad2.left_stick_x.toDouble()) * factor
             leftPower = Range.clip(drive + turn, -1.0, 1.0)
             rightPower = Range.clip(drive - turn, -1.0, 1.0)
 
