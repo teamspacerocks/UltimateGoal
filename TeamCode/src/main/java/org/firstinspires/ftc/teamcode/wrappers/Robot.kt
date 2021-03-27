@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode
+package org.firstinspires.ftc.teamcode.wrappers
 
 import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
@@ -6,29 +6,29 @@ import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.util.ElapsedTime
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration
-import org.firstinspires.ftc.teamcode.Motors.*
+import org.firstinspires.ftc.teamcode.wrappers.Motors.*
 import kotlin.math.abs
 
 
-class RobotExperimental(_env: LinearOpMode): Robot(_env) {
+open class Robot(_env: LinearOpMode) {
 
-    /*
     private val runtime = ElapsedTime()
-    private val env = _env
+    protected val env = _env
 
-    private val driver: Array<DcMotor>
+    protected val driver: Array<DcMotor>
 
     private val launcher: DcMotor
     private val intake: DcMotor
     private val conveyor: DcMotor
-    private val arm: DcMotor
+    val arm: DcMotor
 
     private val grabber: CRServo
 
-    val webcam: TensorWrapper
+    val webcam: TfodWrapper
     val imu: BNO055IMU
 
+
+    var ring: Ring
 
     init {
         // Initialize the hardware variables. Note that the strings used here as parameters
@@ -43,7 +43,6 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
         * each Motor.
         *
         * */
-
         driver = arrayOf(
                 getMotor(LF.s),
                 getMotor(RF.s),
@@ -51,22 +50,24 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
                 getMotor(RB.s)
         )
 
-        launcher = getMotor("launch2")
+        launcher = getMotor(R_LAUNCH.s)
         intake = getMotor("intake")
         conveyor = getMotor("conveyor")
         arm = getMotor("arm")
 
         grabber = getServo("grabber")
 
-        webcam = TensorWrapper(env)
-
+        webcam = TfodWrapper(env)
         val parameters = BNO055IMU.Parameters()
         parameters.mode = BNO055IMU.SensorMode.IMU
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
         parameters.loggingEnabled = false
 
         imu = env.hardwareMap.get(BNO055IMU::class.java, "imu")
         imu.initialize(parameters)
+
+        ring = Ring(getColorSensor("sensor"), getDistanceSensor("sensor"))
 
         //set runmodes
         //encode(*launcher)
@@ -145,12 +146,10 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
         off()
     }
 
-     */
-
-    override fun goTo(power: Double,
-                      position: Int,
-                      targetAngle:Float,
-                      busy:Boolean) {
+    open fun goTo(power: Double,
+             position: Int,
+             targetAngle:Float = imu.angularOrientation.firstAngle,
+             busy:Boolean = false) {
         if(!busy) {
             accelerateTo(power, position, targetAngle)
         } else {
@@ -158,8 +157,24 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
                 accelerateTo(power, position, targetAngle)
             }
         }
+        //TODO: add a+bx mintime thing so that it doesn't run for too long
     }
-     private fun accelerateTo(power:Double,
+
+    private fun driverTargetAvg(): Int {
+        return (driver[0].targetPosition +
+                driver[1].targetPosition +
+                driver[2].targetPosition +
+                driver[3].targetPosition)/4
+    }
+
+    private fun driverCurrAvg(): Int {
+        return (driver[0].currentPosition +
+                driver[1].currentPosition +
+                driver[2].currentPosition +
+                driver[3].currentPosition)/4
+    }
+
+    private fun accelerateTo(power:Double,
                              position:Int,
                              targetAngle:Float = imu.angularOrientation.firstAngle) {
         //there must be a better way of doing this
@@ -168,42 +183,22 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
             driver[i].targetPosition = oldPosition[i] + position
         }
         val start = env.runtime
-//        var sum = 0
-//        for(motor in driver) {
-//            sum += motor.targetPosition
-//        }
-
-        var stage = 0
-        var adjustment = 0.0
-        while ((stage == 0 || env.runtime - 0.5 < adjustment) && env.opModeIsActive()) {
-            if (stage == 0 && abs(driver[0].currentPosition-driver[0].targetPosition) <= 9) {
-                stage = 1
-                adjustment = env.runtime
-            }
+        while(abs(driverTargetAvg() - driverCurrAvg()) > 9 && env.opModeIsActive()) {
             val calculatedPower: Double = abs(power)
-                    .coerceAtMost(abs(driver[0].currentPosition - driver[0].targetPosition) / 150.0) //deceleration
+                    .coerceAtMost(abs(driverCurrAvg() - driverTargetAvg()) / 150.0) //deceleration
                     .coerceAtMost(env.runtime - start) //acceleration
-            if (driver[0].targetPosition - driver[0].currentPosition > 0) {
+            if (driverCurrAvg() - driverTargetAvg() < 0) {
                 imudrive(calculatedPower, angle = targetAngle)
             } else {
                 imudrive(-calculatedPower, angle = targetAngle)
             }
             env.telemetry.addData("opmode", env.opModeIsActive())
-                    .addData("runtime, adjustment","${env.runtime}, $adjustment")
             env.telemetry.update()
         }
 
         drive(0.0)
     }
 
-    private fun getSum():Int {
-        var sum = 0
-        for(motor in driver) {
-            sum += motor.currentPosition
-        }
-        return sum
-    }
-    /*
     fun setLaunchPower(power: Double = 0.0) {
         launcher.power = power
 
@@ -219,7 +214,13 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
 
     fun liftPosition(p: Int) {
         arm.targetPosition = p
+    }
 
+    fun getArmMovement(): Double {
+        var result = 0.0
+//        result = abs(halfSecondAgo - arm.currentPosition)
+        result *= arm.power
+        return abs(result)
     }
 
     fun grab(p: Double) {
@@ -256,7 +257,5 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
         drive(0.0)
         intake(0.0)
     }
-
-     */
 
 }

@@ -1,13 +1,15 @@
-package org.firstinspires.ftc.teamcode
+package org.firstinspires.ftc.teamcode.auto
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition
+import org.firstinspires.ftc.teamcode.wrappers.Robot
 
-@Autonomous(name = "TensorBlueRight", group = "Auto")
-@Disabled
-class TensorBlueRight : LinearOpMode() {
+@Autonomous(name = "TensorBlueLeft", group = "Auto") @Disabled
+class TensorBlueLeft : LinearOpMode() {
+    // Declare OpMode members.
     private val runtime = ElapsedTime()
     private lateinit var robot : Robot
 
@@ -18,6 +20,7 @@ class TensorBlueRight : LinearOpMode() {
         telemetry.addData("Status:", "Initialized")
         telemetry.update()
 
+        // Wait for the game to start (driver presses PLAY)
         waitForStart()
         runtime.reset()
 
@@ -26,26 +29,24 @@ class TensorBlueRight : LinearOpMode() {
 
         val label = getBestRecognition() // highest confidence recognition type(single, quad, none)
 
+        telemetry.addData("type", label)
+        telemetry.update()
+
         robot.grab(-0.5)
         sleep(250)
-        robot.travel(0.5, 3000, targetAngle = 0.0f)
+        robot.travel(0.5, 2700, targetAngle = 0.0f)
         sleep(500)
 
         when(label){
-            "None"   -> {
-                robot.travel(0.0, 750, targetAngle = 90.0f)
-                sleep(500)
-                robot.travel(0.5, 500)
-            }
             "Single" -> {
-                robot.travel(0.5,500, targetAngle = 0.0f)
+                robot.travel(0.5,750, targetAngle = 0.0f)
+                sleep(200)
+                robot.travel(0.0,800, targetAngle = -45.0f)
+                sleep(200)
+                robot.travel(0.5,400)
             }
             "Quad"   -> {
-                robot.travel(0.5,1500, targetAngle = 0.0f)
-                sleep(500)
-                robot.travel(0.0, 750, targetAngle = 90.0f)
-                sleep(500)
-                robot.travel(0.5, 500)
+                robot.travel(0.5,2000, targetAngle = 0.0f)
             }
         }
 

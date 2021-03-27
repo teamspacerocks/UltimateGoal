@@ -1,17 +1,20 @@
-package org.firstinspires.ftc.teamcode
+package org.firstinspires.ftc.teamcode.auto
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition
+import org.firstinspires.ftc.teamcode.wrappers.Robot
 
-@Autonomous(name = "TensorRedLeft", group = "Auto")
-class TensorRedLeft : LinearOpMode() {
+@Autonomous(name = "TensorBlueRight", group = "Auto")
+@Disabled
+class TensorBlueRight : LinearOpMode() {
     private val runtime = ElapsedTime()
     private lateinit var robot : Robot
 
     override fun runOpMode() {
 
-        robot = RobotExperimental(this)
+        robot = Robot(this)
 
         telemetry.addData("Status:", "Initialized")
         telemetry.update()
@@ -19,43 +22,33 @@ class TensorRedLeft : LinearOpMode() {
         waitForStart()
         runtime.reset()
 
-        robot.grab(-0.5) //hold wobble goal
-        sleep(250)
-
-        //turn camera towards stack
-        robot.goTo(0.5, 250)
-        sleep(500)
-        robot.travel(0.0, 500, targetAngle=30.0f)
-
         robot.webcam.tfod.activate()
         sleep(1000)
 
         val label = getBestRecognition() // highest confidence recognition type(single, quad, none)
 
-        robot.travel(0.0, 500, targetAngle=0.0f)
-        sleep(500)
-        robot.goTo(0.5, 2000, targetAngle = 0.0f)
+        robot.grab(-0.5)
+        sleep(250)
+        robot.travel(0.5, 3000, targetAngle = 0.0f)
         sleep(500)
 
         when(label){
             "None"   -> {
-                robot.goTo(0.5, 100)
-                robot.travel(0.0, 750, targetAngle = -45.0f)
+                robot.travel(0.0, 750, targetAngle = 90.0f)
+                sleep(500)
+                robot.travel(0.5, 500)
             }
             "Single" -> {
-                robot.goTo(0.5,750, targetAngle = 0.0f)
-                sleep(500)
-                robot.travel(0.0, 750, targetAngle = 30.0f)
-                sleep(500)
-                robot.goTo(0.5,250, targetAngle = 30.0f)
+                robot.travel(0.5,500, targetAngle = 0.0f)
             }
             "Quad"   -> {
-                robot.goTo(0.5,1750, targetAngle = 0.0f)
+                robot.travel(0.5,1500, targetAngle = 0.0f)
                 sleep(500)
-                robot.travel(0.0, 750, targetAngle = -45.0f)
+                robot.travel(0.0, 750, targetAngle = 90.0f)
+                sleep(500)
+                robot.travel(0.5, 500)
             }
         }
-        sleep(500)
 
         robot.lift(-0.5) //BRING down the wobble goal
         sleep(1000)
@@ -66,20 +59,12 @@ class TensorRedLeft : LinearOpMode() {
 
         when(label) {
             "Single" -> {
-                robot.travel(0.0, 500, targetAngle = 0.0f)
-                sleep(500)
-                robot.goTo(0.5,-600, targetAngle=0.0f)
+                robot.travel(-0.5,750)
             }
             "Quad" -> {
-                robot.travel(0.0, 750, targetAngle=0.0f)
-                sleep(500)
-                robot.goTo(0.5,-1700, targetAngle=0.0f)
+                robot.travel(-0.5,2000)
             }
         }
-        sleep(500)
-        robot.lift(0.5)
-        sleep(1250)
-        robot.lift(0.0)
     }
 
     fun getBestRecognition():String {

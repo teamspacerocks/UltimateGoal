@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode
+package org.firstinspires.ftc.teamcode.driverControlled
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
@@ -74,17 +74,19 @@ class Test : LinearOpMode() {
             leftFront.power = leftPower
 
             //launching input based on up & down on dpad
-            if(gamepad1.dpad_down) {
-                launch1.power = 1.0
-                launch2.power = 2.0
-            }
-            else if(gamepad1.dpad_up) {
-                launch1.power = -1.0
-                launch2.power = -1.0
-            }
-            else {
-                launch1.power = 0.0
-                launch2.power = 0.0
+            when {
+                gamepad1.dpad_down -> {
+                    launch1.power = 1.0
+                    launch2.power = 2.0
+                }
+                gamepad1.dpad_up -> {
+                    launch1.power = -1.0
+                    launch2.power = -1.0
+                }
+                else -> {
+                    launch1.power = 0.0
+                    launch2.power = 0.0
+                }
             }
 
             // Show the elapsed game time and wheel power.

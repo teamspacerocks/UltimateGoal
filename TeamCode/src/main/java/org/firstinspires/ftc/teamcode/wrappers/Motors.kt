@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode
+package org.firstinspires.ftc.teamcode.wrappers
 
 enum class Motors(val i: Int, val s: String) {
     LF(0, "left_front"),
