@@ -110,14 +110,14 @@ class DriverControlled : LinearOpMode() {
             }
             when {
                 gamepad2.dpad_down -> {
-                    robot.arm.power = -0.5
+                    robot.arm.power = -0.75
                     robot.arm.targetPosition = -400
                 }
                 gamepad2.dpad_up -> {
-                    robot.arm.power = 1.0
-                    robot.arm.targetPosition = 0
+                    robot.arm.power = 0.75
+                    robot.arm.targetPosition = robot.arm.currentPosition + 1000
                 }
-                abs(robot.armDelta) < 1 -> {
+                abs(robot.armDelta) < 5 -> {
                     robot.arm.power = 0.0
                 }
             }
@@ -144,8 +144,8 @@ class DriverControlled : LinearOpMode() {
             telemetry.addData("Status", "Run Time: $runtime")
 //            telemetry.addData("powers", "LF: $lf, RF: $rf, LB: $lb, RB: $rb")
             telemetry.addData("shooter: ", shootPower)
-            telemetry.addData("armdelta", robot.armDelta)
-            telemetry.addData("currentposition", robot.arm.currentPosition)
+            telemetry.addData("armdelta", robot.armDelta).addData("power", robot.arm.power)
+            telemetry.addData("currentposition", robot.arm.currentPosition).addData("targepos", robot.arm.targetPosition)
             telemetry.update()
         }
 

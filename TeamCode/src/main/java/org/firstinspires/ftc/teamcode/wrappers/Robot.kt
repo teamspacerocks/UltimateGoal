@@ -15,7 +15,7 @@ open class Robot(_env: LinearOpMode) {
     private val runtime = ElapsedTime()
     protected val env = _env
 
-    protected val driver: Array<DcMotor>
+    protected var driver: Array<DcMotor>
 
     protected val launcher: DcMotor
     private val intake: DcMotor
@@ -182,10 +182,7 @@ open class Robot(_env: LinearOpMode) {
                              position:Int,
                              targetAngle:Float = imu.angularOrientation.firstAngle) {
         //there must be a better way of doing this
-        val oldPosition = intArrayOf(driver[0].currentPosition, driver[1].currentPosition, driver[2].currentPosition, driver[3].currentPosition)
-        for(i in 0..3) {
-            driver[i].targetPosition = oldPosition[i] + position
-        }
+        driver.forEach{it.targetPosition = it.currentPosition + position}
         val start = env.runtime
         while(abs(driverTargetAvg() - driverCurrAvg()) > 9 && env.opModeIsActive()) {
             val calculatedPower: Double = abs(power)

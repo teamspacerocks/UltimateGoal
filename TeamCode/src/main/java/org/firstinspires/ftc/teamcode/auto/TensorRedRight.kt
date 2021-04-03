@@ -21,7 +21,8 @@ class TensorRedRight : LinearOpMode() {
         waitForStart()
         runtime.reset()
 
-        robot.grab(-0.5) //hold wobble goal
+        //grab wobble goal
+        robot.grab(-0.5)
         sleep(250)
 
         //turn camera towards stack
@@ -29,16 +30,18 @@ class TensorRedRight : LinearOpMode() {
         sleep(500)
         robot.travel(0.0, 500, targetAngle=30.0f)
 
+        //recognize
         robot.webcam.tfod.activate()
         sleep(1000)
+        val label = getBestRecognition()
 
-        val label = getBestRecognition() // highest confidence recognition type(single, quad, none)
-
+        //turn forward again
         robot.travel(0.0, 500, targetAngle=0.0f)
         sleep(500)
         robot.goTo(0.5, 2000, targetAngle = 0.0f)
         sleep(500)
 
+        //drive forward & turn towards box depending on how many rings
         when(label){
             "None"   -> {
                 robot.goTo(0.5, 100)
@@ -59,13 +62,15 @@ class TensorRedRight : LinearOpMode() {
         }
         sleep(500)
 
-        robot.lift(-0.5) //BRING down the wobble goal
+        //bring down the wobble goal
+        robot.lift(-0.5)
         sleep(1000)
         robot.lift(0.0)
         robot.grab(1.0)
         sleep(200)
         robot.grab(0.0)
 
+        //turn forward and return to the line
         when(label) {
             "Single" -> {
                 robot.turnTo(500, targetAngle = 0.0f)
@@ -83,6 +88,7 @@ class TensorRedRight : LinearOpMode() {
         sleep(1250)
         robot.lift(0.0)
 
+        // ????
         when(label){
             "Single" -> {
                 robot.goTo(0.5,600, targetAngle = 0.0f)
@@ -92,11 +98,14 @@ class TensorRedRight : LinearOpMode() {
             }
         }
 
+
+
         robot.setLaunchPower(1.0)
+        sleep(1000)
         robot.conveyor(1.0)
-        robot.intake(0.0)
         sleep(500)
         robot.setLaunchPower(0.0)
+        robot.conveyor(0.0)
     }
 
     fun getBestRecognition():String {
