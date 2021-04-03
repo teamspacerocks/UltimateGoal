@@ -6,8 +6,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition
 import org.firstinspires.ftc.teamcode.wrappers.Robot
 import org.firstinspires.ftc.teamcode.wrappers.RobotExperimental
 
-@Autonomous(name = "TensorRedLeft", group = "Auto")
-class TensorRedLeft : LinearOpMode() {
+@Autonomous(name = "TensorRedRight", group = "Auto")
+class TensorRedRight : LinearOpMode() {
     private val runtime = ElapsedTime()
     private lateinit var robot : Robot
 
@@ -42,19 +42,19 @@ class TensorRedLeft : LinearOpMode() {
         when(label){
             "None"   -> {
                 robot.goTo(0.5, 100)
-                robot.travel(0.0, 750, targetAngle = -45.0f)
+                robot.turnTo(750, targetAngle = -45.0f)
             }
             "Single" -> {
                 robot.goTo(0.5,750, targetAngle = 0.0f)
                 sleep(500)
-                robot.travel(0.0, 750, targetAngle = 30.0f)
+                robot.turnTo(750, targetAngle = 30.0f)
                 sleep(500)
                 robot.goTo(0.5,250, targetAngle = 30.0f)
             }
             "Quad"   -> {
                 robot.goTo(0.5,1750, targetAngle = 0.0f)
                 sleep(500)
-                robot.travel(0.0, 750, targetAngle = -45.0f)
+                robot.turnTo(750, targetAngle = -45.0f)
             }
         }
         sleep(500)
@@ -68,12 +68,12 @@ class TensorRedLeft : LinearOpMode() {
 
         when(label) {
             "Single" -> {
-                robot.travel(0.0, 500, targetAngle = 0.0f)
+                robot.turnTo(500, targetAngle = 0.0f)
                 sleep(500)
                 robot.goTo(0.5,-600, targetAngle=0.0f)
             }
             "Quad" -> {
-                robot.travel(0.0, 750, targetAngle=0.0f)
+                robot.turnTo(750, targetAngle=0.0f)
                 sleep(500)
                 robot.goTo(0.5,-1700, targetAngle=0.0f)
             }
@@ -82,6 +82,21 @@ class TensorRedLeft : LinearOpMode() {
         robot.lift(0.5)
         sleep(1250)
         robot.lift(0.0)
+
+        when(label){
+            "Single" -> {
+                robot.goTo(0.5,600, targetAngle = 0.0f)
+            }
+            "Quad" -> {
+                robot.goTo(0.5,1700, targetAngle = 0.0f)
+            }
+        }
+
+        robot.setLaunchPower(1.0)
+        robot.conveyor(1.0)
+        robot.intake(0.0)
+        sleep(500)
+        robot.setLaunchPower(0.0)
     }
 
     fun getBestRecognition():String {

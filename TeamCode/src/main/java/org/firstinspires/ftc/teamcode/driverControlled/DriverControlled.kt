@@ -5,19 +5,21 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.wrappers.Robot
+import org.firstinspires.ftc.teamcode.wrappers.RobotExperimental
+import kotlin.math.abs
 
 @TeleOp(name = "TeleOp", group = "Tele") //@Disabled
 class DriverControlled : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
-    private lateinit var robot : Robot
+    private lateinit var robot : RobotExperimental
     private var intakePower = 0.0 //for toggle function
     private var shootPower = 0.85
     private var ppos:Int = 0
 
     override fun runOpMode() {
 
-        robot = Robot(this)
+        robot = RobotExperimental(this)
 
 
         telemetry.addData("Status:", "Initialized")
@@ -26,6 +28,8 @@ class DriverControlled : LinearOpMode() {
         // Wait for the game to start (driver presses PLAY)
         waitForStart()
         runtime.reset()
+
+        robot.encode(robot.arm)
 
 
         // run until the end of the match (driver presses STOP)
@@ -102,6 +106,7 @@ class DriverControlled : LinearOpMode() {
 
             if(gamepad2.left_trigger > 0) {
                 robot.encode(robot.arm)
+
             }
             when {
                 gamepad2.dpad_down -> {
@@ -110,12 +115,14 @@ class DriverControlled : LinearOpMode() {
                 }
                 gamepad2.dpad_up -> {
                     robot.arm.power = 1.0
-                    robot.arm.targetPosition = robot.arm.currentPosition + 100
+                    robot.arm.targetPosition = 0
                 }
-                else -> {
+                abs(robot.armDelta) < 1 -> {
                     robot.arm.power = 0.0
                 }
             }
+
+
 
 
 //
@@ -135,11 +142,11 @@ class DriverControlled : LinearOpMode() {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: $runtime")
-            telemetry.addData("powers", "LF: $lf, RF: $rf, LB: $lb, RB: $rb")
+//            telemetry.addData("powers", "LF: $lf, RF: $rf, LB: $lb, RB: $rb")
             telemetry.addData("shooter: ", shootPower)
-            telemetry.addData("targetposition: ", robot.arm.targetPosition)
+            telemetry.addData("armdelta", robot.armDelta)
             telemetry.addData("currentposition", robot.arm.currentPosition)
-            telemetry.update() 
+            telemetry.update()
         }
 
     }
