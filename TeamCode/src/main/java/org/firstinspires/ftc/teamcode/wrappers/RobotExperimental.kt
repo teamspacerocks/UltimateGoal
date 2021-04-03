@@ -11,23 +11,23 @@ import kotlin.math.abs
 
 class RobotExperimental(_env: LinearOpMode): Robot(_env) {
 
-    private var armDelta : Int
-    private var armLastLocation : Int
-    private var deltaTimer : Timer
+    var armDelta : Int
+    var armLastLocation : Int
+    var deltaTimer : Timer
 
     init{
         launcher.mode = DcMotor.RunMode.RUN_USING_ENCODER
         armDelta = 0
         armLastLocation = arm.currentPosition
         deltaTimer = Timer("deltaUpdate", true)
-        deltaTimer.scheduleAtFixedRate(DeltaUpdate(this), 0, 500)
+        deltaTimer.scheduleAtFixedRate(DeltaUpdate(this), 0, 250)
     }
 
-    class DeltaUpdate(_env : RobotExperimental) : TimerTask() {
-        private val env = _env
+    class DeltaUpdate(_robot : RobotExperimental) : TimerTask() {
+        private val robot = _robot
         override fun run() {
-            env.armDelta = env.arm.currentPosition - env.armLastLocation
-            env.armLastLocation = env.arm.currentPosition
+            robot.armDelta = robot.arm.currentPosition - robot.armLastLocation
+            robot.armLastLocation = robot.arm.currentPosition
         }
 
     }
@@ -62,7 +62,7 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
                 adjustment = env.runtime
             }
             val calculatedPower: Double = abs(power)
-                    .coerceAtMost(abs(driver[0].currentPosition - driver[0].targetPosition) / 150.0) //deceleration
+                    .coerceAtMost(abs(driver[0].currentPosition - driver[0].targetPosition) / 50.0) //deceleration
                     .coerceAtMost(env.runtime - start) //acceleration
             if (driver[0].targetPosition - driver[0].currentPosition > 0) {
                 imudrive(calculatedPower, angle = targetAngle)

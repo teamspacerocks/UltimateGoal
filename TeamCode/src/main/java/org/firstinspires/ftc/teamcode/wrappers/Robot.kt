@@ -146,6 +146,10 @@ open class Robot(_env: LinearOpMode) {
         off()
     }
 
+    open fun turnTo(ms: Int, targetAngle: Float){
+        travel(0.0, 750, targetAngle = -45.0f)
+    }
+
     open fun goTo(power: Double,
              position: Int,
              targetAngle:Float = imu.angularOrientation.firstAngle,
