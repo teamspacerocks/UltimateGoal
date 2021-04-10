@@ -168,9 +168,6 @@ public class SensorBNO055IMU extends LinearOpMode
                                     + gravity.zAccel*gravity.zAccel));
                     }
                 });
-
-        telemetry.addLine().addData("pos", imu.getPosition().toString());
-
     }
 
     //----------------------------------------------------------------------------------------------
