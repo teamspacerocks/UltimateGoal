@@ -121,9 +121,9 @@ open class Robot(_env: LinearOpMode) {
                ms: Long,
                atime: Long = Math.min(1000,ms),
                useIMU: Boolean = true,
-               targetAngle: Float = imu.angularOrientation.firstAngle) {
+               targetAngle: Double = imu.angularOrientation.firstAngle.toDouble()) {
         GlobalScope.launch {
-            accelerate(power, ms, atime, useIMU, targetAngle)
+            accelerate(power, ms, atime, useIMU, targetAngle.toFloat())
         }
         env.sleep(ms)
         drive(0.0)
@@ -146,19 +146,19 @@ open class Robot(_env: LinearOpMode) {
         off()
     }
 
-    open fun turnTo(ms: Int, targetAngle: Float = -45.0f){
+    open fun turnTo(ms: Int, targetAngle: Double = -45.0){
         travel(0.0, 750, targetAngle = targetAngle)
     }
 
     open fun goTo(power: Double,
              position: Int,
-             targetAngle:Float = imu.angularOrientation.firstAngle,
+             targetAngle:Double = imu.angularOrientation.firstAngle.toDouble(),
              busy:Boolean = false) {
         if(!busy) {
-            accelerateTo(power, position, targetAngle)
+            accelerateTo(power, position, targetAngle.toFloat())
         } else {
             GlobalScope.launch {
-                accelerateTo(power, position, targetAngle)
+                accelerateTo(power, position, targetAngle.toFloat())
             }
         }
         //TODO: add a+bx mintime thing so that it doesn't run for too long
@@ -194,8 +194,8 @@ open class Robot(_env: LinearOpMode) {
             }
             val calculatedPower: Double = abs(power)
                     .coerceAtMost(abs(driverCurrAvg() - driverTargetAvg()) / 1500.0 - 0.2) //deceleration
+                    .coerceAtLeast(if(stage==0) 0.25 else 0.0)
                     .coerceAtMost(env.runtime - start) //acceleration
-                    .coerceAtLeast(if(stage==0) 0.2 else 0.0)
             if (driverTargetAvg() - driverCurrAvg() > 0) {
                 imudrive(calculatedPower, angle = targetAngle)
             } else {

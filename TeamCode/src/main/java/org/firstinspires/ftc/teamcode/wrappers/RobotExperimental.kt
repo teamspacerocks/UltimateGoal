@@ -34,7 +34,7 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
 
     }
 
-    override fun goTo(power: Double,
+     fun goTo(power: Double,
                       position: Int,
                       targetAngle:Float,
                       busy:Boolean) {

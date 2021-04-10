@@ -27,12 +27,10 @@ class TensorRedRight : LinearOpMode() {
 
         //grab wobble goal
         robot.grab(-0.5)
-//        sleep(250)
 
         //turn camera towards stack
         robot.goTo(0.5, 250)
-//        sleep(500)
-        robot.travel(0.0, 500, targetAngle=30.0f)
+        robot.turnTo(500, 30.0)
 
         //recognize
         robot.webcam.tfod.activate()
@@ -40,27 +38,25 @@ class TensorRedRight : LinearOpMode() {
         val label = getBestRecognition()
 
         //turn forward again
-        robot.travel(0.0, 500, targetAngle=0.0f)
+        robot.turnTo(500,0.0)
         sleep(250)
-//        sleep(500)
 
         //drive forward & turn towards box depending on how many rings
         when(label){
             "None"   -> {
-                robot.goTo(0.7, 2300)
-                robot.turnTo(750, targetAngle = -60.0f)
+                robot.goTo(0.6, 2300)
+                robot.turnTo(750, targetAngle = -60.0)
             }
             "Single" -> {
-                robot.goTo(0.7,2850, targetAngle = 0.0f)
+                robot.goTo(0.6,2850, targetAngle = 0.0)
+                robot.turnTo(750, targetAngle = 30.0)
                 sleep(500)
-                robot.turnTo(750, targetAngle = 30.0f)
-                sleep(500)
-                robot.goTo(0.5,250, targetAngle = 30.0f)
+                robot.goTo(0.5,400, targetAngle = 30.0)
             }
             "Quad"   -> {
-                robot.goTo(0.7, 3800, targetAngle = 0.0f)
+                robot.goTo(0.7, 4000, targetAngle = 0.0)
 //                sleep(500)
-                robot.turnTo(750, targetAngle = -45.0f)
+                robot.turnTo(750, targetAngle = -45.0)
             }
         }
         sleep(250)
@@ -80,30 +76,30 @@ class TensorRedRight : LinearOpMode() {
         //turn forward and return to the line
         when(label) {
             "None" -> {
-                robot.goTo(0.5, -200, targetAngle = -60.0f)
-                robot.turnTo(750, targetAngle = 0.0f)
+                robot.goTo(0.5, -200, targetAngle = -60.0)
+                robot.turnTo(750, targetAngle = 0.0)
                 sleep(250)
-                robot.goTo(0.5, -300, targetAngle = 0.0f)
+                robot.goTo(0.5, -300, targetAngle = 0.0)
                 sleep(250)
-                robot.turnTo(750, targetAngle = 30.0f)
+                robot.turnTo(750, targetAngle = 30.0)
                 sleep(250)
             }
             "Single" -> {
-                robot.turnTo(500, targetAngle = 0.0f)
+                robot.turnTo(500, targetAngle = 0.0)
                 sleep(500)
-                robot.goTo(0.5,-900, targetAngle=0.0f)
-                robot.turnTo(750, targetAngle = 30.0f)
+                robot.goTo(0.5,-1200, targetAngle=0.0)
+                robot.turnTo(750, targetAngle = 30.0)
             }
             "Quad" -> {
-                robot.turnTo(750, targetAngle=0.0f)
+                robot.turnTo(750, targetAngle=0.0)
                 sleep(500)
-                robot.goTo(0.5,-1700, targetAngle=0.0f)
-
+                robot.goTo(0.5,-2000, targetAngle=0.0)
+                robot.turnTo(750, targetAngle = 30.0)
             }
         }
 
         //shoot
-        robot.setLaunchPower(0.75)
+        robot.setLaunchPower(0.72)
         sleep(1700)
         robot.conveyor(1.0)
         robot.intake(1.0)
@@ -115,11 +111,11 @@ class TensorRedRight : LinearOpMode() {
         //park
         when(label) {
             "None" -> {
-                robot.goTo(0.5, 300, targetAngle = 30.0f)
+                robot.goTo(0.5, 300, targetAngle = 30.0)
                 sleep(1000)
             }
             "Single" -> {
-                robot.goTo(0.5, 300, targetAngle = 30.0f)
+                robot.goTo(0.5, 400, targetAngle = 30.0)
             }
             "Quad" -> {
 
