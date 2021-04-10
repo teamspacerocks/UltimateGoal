@@ -17,7 +17,7 @@ open class Robot(_env: LinearOpMode) {
 
     protected var driver: Array<DcMotor>
 
-    protected val launcher: DcMotor
+    val launcher: DcMotor
     private val intake: DcMotor
     private val conveyor: DcMotor
     val arm: DcMotor
@@ -146,8 +146,8 @@ open class Robot(_env: LinearOpMode) {
         off()
     }
 
-    open fun turnTo(ms: Int, targetAngle: Float){
-        travel(0.0, 750, targetAngle = -45.0f)
+    open fun turnTo(ms: Int, targetAngle: Float = -45.0f){
+        travel(0.0, 750, targetAngle = targetAngle)
     }
 
     open fun goTo(power: Double,
@@ -164,18 +164,18 @@ open class Robot(_env: LinearOpMode) {
         //TODO: add a+bx mintime thing so that it doesn't run for too long
     }
 
-    private fun driverTargetAvg(): Int {
+    private fun driverTargetAvg(): Double {
         return (driver[0].targetPosition +
                 driver[1].targetPosition +
                 driver[2].targetPosition +
-                driver[3].targetPosition)/4
+                driver[3].targetPosition)/4.0
     }
 
-    private fun driverCurrAvg(): Int {
+    private fun driverCurrAvg(): Double {
         return (driver[0].currentPosition +
                 driver[1].currentPosition +
                 driver[2].currentPosition +
-                driver[3].currentPosition)/4
+                driver[3].currentPosition)/4.0
     }
 
     private fun accelerateTo(power:Double,
@@ -184,16 +184,25 @@ open class Robot(_env: LinearOpMode) {
         //there must be a better way of doing this
         driver.forEach{it.targetPosition = it.currentPosition + position}
         val start = env.runtime
-        while(abs(driverTargetAvg() - driverCurrAvg()) > 9 && env.opModeIsActive()) {
+        var stage = 0
+        var adjustment = 0.0
+        while ((stage == 0 || env.runtime - 0.2 < adjustment) && env.opModeIsActive()) {
+            if(!env.opModeIsActive()) return
+            if (stage == 0 && abs(driverCurrAvg()-driverTargetAvg()) <= 15) {
+                stage = 1
+                adjustment = env.runtime
+            }
             val calculatedPower: Double = abs(power)
-                    .coerceAtMost(abs(driverCurrAvg() - driverTargetAvg()) / 150.0) //deceleration
+                    .coerceAtMost(abs(driverCurrAvg() - driverTargetAvg()) / 1500.0 - 0.2) //deceleration
                     .coerceAtMost(env.runtime - start) //acceleration
-            if (driverCurrAvg() - driverTargetAvg() < 0) {
+                    .coerceAtLeast(if(stage==0) 0.2 else 0.0)
+            if (driverTargetAvg() - driverCurrAvg() > 0) {
                 imudrive(calculatedPower, angle = targetAngle)
             } else {
                 imudrive(-calculatedPower, angle = targetAngle)
             }
-            env.telemetry.addData("opmode", env.opModeIsActive())
+            env.telemetry.addData("cpower", calculatedPower)
+                    .addData("stage, diff", "$stage, ${driverCurrAvg()-driverTargetAvg()}")
             env.telemetry.update()
         }
 

@@ -16,6 +16,8 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
     var deltaTimer : Timer
 
     init{
+        launcher.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+
         launcher.mode = DcMotor.RunMode.RUN_USING_ENCODER
         armDelta = 0
         armLastLocation = arm.currentPosition
@@ -53,7 +55,6 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
             driver[i].targetPosition = oldPosition[i] + position
         }
         val start = env.runtime
-
         var stage = 0
         var adjustment = 0.0
         while ((stage == 0 || env.runtime - 0.5 < adjustment) && env.opModeIsActive()) {
@@ -71,6 +72,7 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
             }
             env.telemetry.addData("opmode", env.opModeIsActive())
                     .addData("runtime, adjustment","${env.runtime}, $adjustment")
+
             env.telemetry.update()
         }
 
