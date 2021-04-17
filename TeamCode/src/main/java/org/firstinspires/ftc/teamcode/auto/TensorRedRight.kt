@@ -54,9 +54,9 @@ class TensorRedRight : LinearOpMode() {
                 robot.goTo(0.5,400, targetAngle = 30.0)
             }
             "Quad"   -> {
-                robot.goTo(0.7, 4000, targetAngle = 0.0)
+                robot.goTo(0.7, 4100, targetAngle = 0.0)
 //                sleep(500)
-                robot.turnTo(750, targetAngle = -45.0)
+                robot.turnTo(750, targetAngle = -60.0)
             }
         }
         sleep(250)
@@ -118,7 +118,7 @@ class TensorRedRight : LinearOpMode() {
                 robot.goTo(0.5, 400, targetAngle = 30.0)
             }
             "Quad" -> {
-
+                robot.goTo(0.5, 400)
             }
         }
     }
