@@ -69,7 +69,7 @@ class TensorBlueLeft : LinearOpMode() {
 
     fun getBestRecognition():String {
         val recognitions : Array<Recognition> = robot.webcam.see()
-        if (recognitions.isNotEmpty()) {
+        if (recognitions.size != 0) {
             var bestrec: Recognition = recognitions[0]
             for (recognition in recognitions) {
                 if (recognition.confidence > bestrec.confidence) {

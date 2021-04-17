@@ -4,8 +4,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.util.ElapsedTime
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.firstinspires.ftc.teamcode.wrappers.Motors.*
 import kotlin.math.abs
 
@@ -117,17 +115,7 @@ open class Robot(_env: LinearOpMode) {
     }
 
 
-    fun travel(power: Double = 1.0,
-               ms: Long,
-               atime: Long = Math.min(1000,ms),
-               useIMU: Boolean = true,
-               targetAngle: Float = imu.angularOrientation.firstAngle) {
-        GlobalScope.launch {
-            accelerate(power, ms, atime, useIMU, targetAngle)
-        }
-        env.sleep(ms)
-        drive(0.0)
-    }
+
 
     private fun accelerate(power: Double,
                            ms: Long,
@@ -150,17 +138,21 @@ open class Robot(_env: LinearOpMode) {
         travel(0.0, 750, targetAngle = targetAngle)
     }
 
+    fun travel(power: Double = 1.0,
+               ms: Long,
+               atime: Long = Math.min(1000,ms),
+               useIMU: Boolean = true,
+               targetAngle: Float = imu.angularOrientation.firstAngle) {
+
+        accelerate(power, ms, atime, useIMU, targetAngle)
+        drive(0.0)
+    }
+
     open fun goTo(power: Double,
              position: Int,
-             targetAngle:Float = imu.angularOrientation.firstAngle,
-             busy:Boolean = false) {
-        if(!busy) {
-            accelerateTo(power, position, targetAngle)
-        } else {
-            GlobalScope.launch {
-                accelerateTo(power, position, targetAngle)
-            }
-        }
+             targetAngle:Float = imu.angularOrientation.firstAngle) {
+
+        accelerateTo(power, position, targetAngle)
         //TODO: add a+bx mintime thing so that it doesn't run for too long
     }
 
@@ -182,7 +174,9 @@ open class Robot(_env: LinearOpMode) {
                              position:Int,
                              targetAngle:Float = imu.angularOrientation.firstAngle) {
         //there must be a better way of doing this
-        driver.forEach{it.targetPosition = it.currentPosition + position}
+        for(M in driver){
+            M.targetPosition = M.currentPosition + position
+        }
         val start = env.runtime
         var stage = 0
         var adjustment = 0.0
@@ -192,10 +186,11 @@ open class Robot(_env: LinearOpMode) {
                 stage = 1
                 adjustment = env.runtime
             }
-            val calculatedPower: Double = abs(power)
-                    .coerceAtMost(abs(driverCurrAvg() - driverTargetAvg()) / 1500.0 - 0.2) //deceleration
-                    .coerceAtMost(env.runtime - start) //acceleration
-                    .coerceAtLeast(if(stage==0) 0.2 else 0.0)
+            val calculatedPower:
+                    Double = Utils.varMin(abs(power),
+                (abs(driverCurrAvg() - driverTargetAvg()) / 1500.0 - 0.2), //deceleration
+                (env.runtime - start),
+                (if(stage==0) 0.2 else 0.0))
             if (driverTargetAvg() - driverCurrAvg() > 0) {
                 imudrive(calculatedPower, angle = targetAngle)
             } else {

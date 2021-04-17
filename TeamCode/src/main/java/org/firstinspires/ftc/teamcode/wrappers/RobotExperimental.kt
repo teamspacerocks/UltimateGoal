@@ -2,31 +2,44 @@ package org.firstinspires.ftc.teamcode.wrappers
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.DcMotor
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import java.lang.RuntimeException
 import java.util.*
-import kotlin.concurrent.timer
-import kotlin.math.abs
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.LinkedBlockingQueue
+import kotlin.math.min
 
 
 class RobotExperimental(_env: LinearOpMode): Robot(_env) {
 
-    var armDelta : Int
-    var armLastLocation : Int
-    var deltaTimer : Timer
+    var armDelta : Int = 0
+    var armLastLocation : Int = arm.currentPosition
+    private var deltaTimer : Timer = Timer("deltaUpdate", true)
+    private val jobQueue : BlockingQueue<MoveJob> = LinkedBlockingQueue()
+    private val worker : Thread = Thread(MoveAsync(this))
+
+    open class MoveJob
+    class TravelJob(
+        val power: Double,
+        val ms: Long,
+        val atime: Long = Math.min(1000, ms),
+        val useIMU: Boolean = true,
+        val targetAngle: Float
+    ): MoveJob()
+    class GotoJob(
+        val power: Double,
+        val position: Int,
+        val targetAngle: Float
+    ): MoveJob()
+
 
     init{
         launcher.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-
         launcher.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        armDelta = 0
-        armLastLocation = arm.currentPosition
-        deltaTimer = Timer("deltaUpdate", true)
         deltaTimer.scheduleAtFixedRate(DeltaUpdate(this), 0, 250)
+        worker.isDaemon = true
     }
 
-    class DeltaUpdate(_robot : RobotExperimental) : TimerTask() {
-        private val robot = _robot
+    class DeltaUpdate(private val robot: RobotExperimental) : TimerTask() {
         override fun run() {
             robot.armDelta = robot.arm.currentPosition - robot.armLastLocation
             robot.armLastLocation = robot.arm.currentPosition
@@ -34,59 +47,49 @@ class RobotExperimental(_env: LinearOpMode): Robot(_env) {
 
     }
 
-    override fun goTo(power: Double,
-                      position: Int,
-                      targetAngle:Float,
-                      busy:Boolean) {
-        if(!busy) {
-            accelerateTo(power, position, targetAngle)
-        } else {
-            GlobalScope.launch {
-                accelerateTo(power, position, targetAngle)
+    class MoveAsync(_robot : RobotExperimental): Runnable{
+        private val robot = _robot
+        override fun run() {
+            while(true){
+                val j = robot.jobQueue.take()
+                if(j is TravelJob){
+                    robot.travel(j)
+                }else if(j is GotoJob){
+                    robot.goTo(j)
+                }
+                throw RuntimeException("I have no idea how this could happen")
             }
         }
     }
-     private fun accelerateTo(power:Double,
-                             position:Int,
-                             targetAngle:Float = imu.angularOrientation.firstAngle) {
-        //there must be a better way of doing this
-        val oldPosition = intArrayOf(driver[0].currentPosition, driver[1].currentPosition, driver[2].currentPosition, driver[3].currentPosition)
-        for(i in 0..3) {
-            driver[i].targetPosition = oldPosition[i] + position
-        }
-        val start = env.runtime
-        var stage = 0
-        var adjustment = 0.0
-        while ((stage == 0 || env.runtime - 0.5 < adjustment) && env.opModeIsActive()) {
-            if (stage == 0 && abs(driver[0].currentPosition-driver[0].targetPosition) <= 9) {
-                stage = 1
-                adjustment = env.runtime
-            }
-            val calculatedPower: Double = abs(power)
-                    .coerceAtMost(abs(driver[0].currentPosition - driver[0].targetPosition) / 50.0) //deceleration
-                    .coerceAtMost(env.runtime - start) //acceleration
-            if (driver[0].targetPosition - driver[0].currentPosition > 0) {
-                imudrive(calculatedPower, angle = targetAngle)
-            } else {
-                imudrive(-calculatedPower, angle = targetAngle)
-            }
-            env.telemetry.addData("opmode", env.opModeIsActive())
-                    .addData("runtime, adjustment","${env.runtime}, $adjustment")
 
-            env.telemetry.update()
-        }
+    fun travel(power: Double = 1.0,
+               ms: Long,
+               atime: Long = min(1000,ms),
+               useIMU: Boolean = true,
+               targetAngle: Float = imu.angularOrientation.firstAngle,
+               async: Boolean = false){
+        if(async) {
+            jobQueue.add(TravelJob(power, ms, atime, useIMU, targetAngle))
 
-        drive(0.0)
+        } else
+            super.travel(power, ms, atime, useIMU, targetAngle)
     }
-
-    private fun getSum():Int {
-        var sum = 0
-        for(motor in driver) {
-            sum += motor.currentPosition
-        }
-        return sum
+    private fun travel(job : TravelJob){
+        super.travel(job.power, job.ms, job.atime, job.useIMU, job.targetAngle)
     }
 
 
+    fun goTo(power: Double,
+             position: Int,
+             targetAngle:Float = imu.angularOrientation.firstAngle,
+             async: Boolean = false){
+        if(async)
+            jobQueue.add(GotoJob(power, position, targetAngle))
+        else
+            super.goTo(power, position, targetAngle)
+    }
+    private fun goTo(job : GotoJob){
+        super.goTo(job.power, job.position, job.targetAngle)
+    }
 
 }
