@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition
 import org.firstinspires.ftc.teamcode.wrappers.Robot
+import org.firstinspires.ftc.teamcode.wrappers.RobotExperimental
 
 @Autonomous(name = "TensorRedRight", group = "Auto")
 class TensorRedRight : LinearOpMode() {
@@ -26,12 +27,10 @@ class TensorRedRight : LinearOpMode() {
 
         //grab wobble goal
         robot.grab(-0.5)
-//        sleep(250)
 
         //turn camera towards stack
         robot.goTo(0.5, 250)
-//        sleep(500)
-        robot.travel(0.0, 500, targetAngle =30.0f)
+        robot.turnTo(500, 30.0)
 
         //recognize
         robot.webcam.tfod.activate()
@@ -41,7 +40,6 @@ class TensorRedRight : LinearOpMode() {
         //turn forward again
         robot.turnTo(500,0.0)
         sleep(250)
-//        sleep(500)
 
         //drive forward & turn towards box depending on how many rings
         when(label){
@@ -93,10 +91,18 @@ class TensorRedRight : LinearOpMode() {
                 robot.turnTo(750, targetAngle = 30.0)
             }
             "Quad" -> {
+<<<<<<< HEAD
+                robot.goTo(0.5, -200, targetAngle = -60.0f)
+                robot.turnTo(750, targetAngle=0.0f)
+                sleep(500)
+                robot.goTo(0.5,-1900, targetAngle=0.0f)
+
+=======
                 robot.turnTo(750, targetAngle=0.0)
                 sleep(500)
                 robot.goTo(0.5,-2000, targetAngle=0.0)
                 robot.turnTo(750, targetAngle = 30.0)
+>>>>>>> master
             }
         }
 

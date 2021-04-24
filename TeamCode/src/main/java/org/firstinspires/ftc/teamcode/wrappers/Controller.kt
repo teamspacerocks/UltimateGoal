@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package org.firstinspires.ftc.teamcode.wrappers
 
 import com.qualcomm.robotcore.hardware.Gamepad

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.roadRunner.drive.opmode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -13,15 +13,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadRunner.drive.SampleMecanumDrive;
 
 import java.util.List;
+import java.util.Objects;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.roadRunner.drive.DriveConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.roadRunner.drive.DriveConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.roadRunner.drive.DriveConstants.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.roadRunner.drive.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.roadRunner.drive.DriveConstants.kV;
 
 /*
  * This routine is designed to tune the PID coefficients used by the REV Expansion Hubs for closed-
@@ -126,7 +127,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
                     // update telemetry
                     telemetry.addData("targetVelocity", motionState.getV());
-                    for (int i = 0; i < velocities.size(); i++) {
+                    for (int i = 0; i < Objects.requireNonNull(velocities).size(); i++) {
                         telemetry.addData("measuredVelocity" + i, velocities.get(i));
                         telemetry.addData(
                                 "error" + i,
@@ -140,7 +141,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
                         mode = Mode.TUNING_MODE;
                         movingForwards = true;
-                        activeProfile = generateProfile(movingForwards);
+                        activeProfile = generateProfile(true);
                         profileStart = clock.seconds();
                     }
 
