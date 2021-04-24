@@ -115,7 +115,17 @@ open class Robot(_env: LinearOpMode) {
     }
 
 
-
+    fun travel(power: Double = 1.0,
+               ms: Long,
+               atime: Long = Math.min(1000,ms),
+               useIMU: Boolean = true,
+               targetAngle: Double = imu.angularOrientation.firstAngle.toDouble()) {
+        GlobalScope.launch {
+            accelerate(power, ms, atime, useIMU, targetAngle.toFloat())
+        }
+        env.sleep(ms)
+        drive(0.0)
+    }
 
     private fun accelerate(power: Double,
                            ms: Long,
@@ -134,18 +144,8 @@ open class Robot(_env: LinearOpMode) {
         off()
     }
 
-    open fun turnTo(ms: Int, targetAngle: Float = -45.0f){
+    open fun turnTo(ms: Int, targetAngle: Double = -45.0){
         travel(0.0, 750, targetAngle = targetAngle)
-    }
-
-    fun travel(power: Double = 1.0,
-               ms: Long,
-               atime: Long = Math.min(1000,ms),
-               useIMU: Boolean = true,
-               targetAngle: Float = imu.angularOrientation.firstAngle) {
-
-        accelerate(power, ms, atime, useIMU, targetAngle)
-        drive(0.0)
     }
 
     open fun goTo(power: Double,
